@@ -48,7 +48,7 @@ class CartTile extends StatelessWidget {
                         ),
                       )
                     : Container(
-                        color: theme.primaryColor.withOpacity(0.1),
+                        color: theme.primaryColor.withValues(alpha: 0.1),
                         child: Icon(
                           Icons.fastfood,
                           color: theme.primaryColor,

@@ -106,9 +106,10 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
         paymentMethod,
       );
       
-      if (order != null && mounted) {
+      if (order != null) {
         // Clear the cart after successful order
         await cartProvider.clearCart(authProvider.user!.id);
+        if (!mounted) return;
         
         Fluttertoast.showToast(
           msg: "Order placed successfully!",
@@ -131,9 +132,11 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
         toastLength: Toast.LENGTH_LONG,
       );
     } finally {
-      setState(() {
-        _isProcessing = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
     }
   }
 
@@ -264,7 +267,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                     borderRadius: BorderRadius.circular(16),
                   ),
                   elevation: 4,
-                  shadowColor: Colors.black.withOpacity(0.1),
+                  shadowColor: Colors.black.withValues(alpha: 0.1),
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Column(
@@ -282,7 +285,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                                   decoration: BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.1),
+                                        color: Colors.black.withValues(alpha: 0.1),
                                         blurRadius: 10,
                                         offset: const Offset(0, 5),
                                       ),
@@ -294,7 +297,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                                           fit: BoxFit.cover,
                                           errorBuilder: (context, error, stackTrace) {
                                             return Container(
-                                              color: theme.primaryColor.withOpacity(0.1),
+                                              color: theme.primaryColor.withValues(alpha: 0.1),
                                               child: Icon(
                                                 Icons.fastfood,
                                                 color: theme.primaryColor,
@@ -304,7 +307,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                                           },
                                         )
                                       : Container(
-                                          color: theme.primaryColor.withOpacity(0.1),
+                                          color: theme.primaryColor.withValues(alpha: 0.1),
                                           child: Icon(
                                             Icons.fastfood,
                                             color: theme.primaryColor,
@@ -331,7 +334,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                                     Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                       decoration: BoxDecoration(
-                                        color: theme.primaryColor.withOpacity(0.1),
+                                        color: theme.primaryColor.withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Text(
@@ -350,10 +353,10 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                 decoration: BoxDecoration(
-                                  color: theme.primaryColor.withOpacity(0.1),
+                                  color: theme.primaryColor.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
-                                    color: theme.primaryColor.withOpacity(0.3),
+                                    color: theme.primaryColor.withValues(alpha: 0.3),
                                   ),
                                 ),
                                 child: Text(
@@ -393,7 +396,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                                   borderRadius: BorderRadius.circular(12),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: theme.primaryColor.withOpacity(0.3),
+                                      color: theme.primaryColor.withValues(alpha: 0.3),
                                       blurRadius: 8,
                                       offset: const Offset(0, 3),
                                     ),
@@ -431,7 +434,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   spreadRadius: 1,
                   blurRadius: 10,
                   offset: const Offset(0, 1),
@@ -485,7 +488,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                         borderRadius: BorderRadius.circular(12),
                       ),
                       elevation: 4,
-                      shadowColor: theme.primaryColor.withOpacity(0.5),
+                      shadowColor: theme.primaryColor.withValues(alpha: 0.5),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -530,7 +533,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: theme.primaryColor.withOpacity(0.3),
+                  color: theme.primaryColor.withValues(alpha: 0.3),
                   width: 2,
                 ),
               ),
@@ -562,7 +565,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
               borderRadius: BorderRadius.circular(16),
             ),
             elevation: 4,
-            shadowColor: Colors.black.withOpacity(0.1),
+            shadowColor: Colors.black.withValues(alpha: 0.1),
             child: ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -589,7 +592,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
                                     return Container(
-                                      color: theme.primaryColor.withOpacity(0.1),
+                                      color: theme.primaryColor.withValues(alpha: 0.1),
                                       child: Icon(
                                         Icons.fastfood,
                                         color: theme.primaryColor,
@@ -598,7 +601,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                                   },
                                 )
                               : Container(
-                                  color: theme.primaryColor.withOpacity(0.1),
+                                  color: theme.primaryColor.withValues(alpha: 0.1),
                                   child: Icon(
                                     Icons.fastfood,
                                     color: theme.primaryColor,
@@ -624,7 +627,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                               decoration: BoxDecoration(
-                                color: theme.primaryColor.withOpacity(0.1),
+                                color: theme.primaryColor.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
@@ -643,10 +646,10 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
-                          color: theme.primaryColor.withOpacity(0.1),
+                          color: theme.primaryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: theme.primaryColor.withOpacity(0.3),
+                            color: theme.primaryColor.withValues(alpha: 0.3),
                           ),
                         ),
                         child: Text(
@@ -673,13 +676,13 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
               ],
               border: Border.all(
-                color: theme.primaryColor.withOpacity(0.3),
+                color: theme.primaryColor.withValues(alpha: 0.3),
               ),
             ),
             child: Row(
@@ -699,7 +702,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: theme.primaryColor.withOpacity(0.3),
+                        color: theme.primaryColor.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 3),
                       ),
@@ -726,7 +729,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: theme.primaryColor.withOpacity(0.3),
+                  color: theme.primaryColor.withValues(alpha: 0.3),
                   width: 2,
                 ),
               ),
@@ -776,7 +779,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                   borderRadius: BorderRadius.circular(12),
                 ),
                 elevation: 4,
-                shadowColor: theme.primaryColor.withOpacity(0.5),
+                shadowColor: theme.primaryColor.withValues(alpha: 0.5),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -821,7 +824,7 @@ Widget _buildPaymentOptions(ThemeData theme, bool isDarkMode) {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: _selectedPaymentMethod == 'cash'
-                ? theme.primaryColor.withOpacity(0.1)
+                ? theme.primaryColor.withValues(alpha: 0.1)
                 : isDarkMode ? theme.cardTheme.color : Colors.white,
             border: Border.all(
               color: _selectedPaymentMethod == 'cash'
@@ -833,7 +836,7 @@ Widget _buildPaymentOptions(ThemeData theme, bool isDarkMode) {
             boxShadow: _selectedPaymentMethod == 'cash'
                 ? [
                     BoxShadow(
-                      color: theme.primaryColor.withOpacity(0.2),
+                      color: theme.primaryColor.withValues(alpha: 0.2),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -919,7 +922,7 @@ Widget _buildPaymentOptions(ThemeData theme, bool isDarkMode) {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: _selectedPaymentMethod == 'upi'
-                ? theme.primaryColor.withOpacity(0.1)
+                ? theme.primaryColor.withValues(alpha: 0.1)
                 : isDarkMode ? theme.cardTheme.color : Colors.white,
             border: Border.all(
               color: _selectedPaymentMethod == 'upi'
@@ -931,7 +934,7 @@ Widget _buildPaymentOptions(ThemeData theme, bool isDarkMode) {
             boxShadow: _selectedPaymentMethod == 'upi'
                 ? [
                     BoxShadow(
-                      color: theme.primaryColor.withOpacity(0.2),
+                      color: theme.primaryColor.withValues(alpha: 0.2),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),

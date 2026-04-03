@@ -73,7 +73,7 @@ class OrderTile extends StatelessWidget {
                   Text(
                     'Date: ${DateFormat('MMM dd, yyyy hh:mm a').format(order.createdAt)}',
                     style: TextStyle(
-                      color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.7) : Colors.grey[600],
+                      color: isDarkMode ? theme.colorScheme.onSurface.withValues(alpha: 0.7) : Colors.grey[600],
                       fontSize: 14,
                     ),
                   ),
@@ -81,7 +81,7 @@ class OrderTile extends StatelessWidget {
                   Text(
                     'Payment Method: ${order.paymentMethod.toUpperCase()}',
                     style: TextStyle(
-                      color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.7) : Colors.grey[600],
+                      color: isDarkMode ? theme.colorScheme.onSurface.withValues(alpha: 0.7) : Colors.grey[600],
                       fontSize: 14,
                     ),
                   ),

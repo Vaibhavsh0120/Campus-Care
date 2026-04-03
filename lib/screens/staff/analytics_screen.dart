@@ -56,11 +56,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         authProvider.user!.id,
         isStaff: true,
       );
+      if (!mounted) return;
       
       // Load items using the ItemProvider
       final itemProvider = Provider.of<ItemProvider>(context, listen: false);
       await itemProvider.loadItems(onlyAvailable: false);
       final items = itemProvider.items;
+      if (!mounted) return;
       
       setState(() {
         _orders = orders;
@@ -70,13 +72,17 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         _calculateAnalytics();
       });
     } catch (e) {
-      setState(() {
-        _error = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          _error = e.toString();
+        });
+      }
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
   
@@ -684,7 +690,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   Widget _buildDateRangeSelector(Color primaryColor, bool isDarkMode, ThemeData theme) {
     return Card(
       elevation: 0,
-      color: isDarkMode ? theme.cardTheme.color?.withOpacity(0.3) : Colors.grey[100],
+      color: isDarkMode ? theme.cardTheme.color?.withValues(alpha: 0.3) : Colors.grey[100],
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),

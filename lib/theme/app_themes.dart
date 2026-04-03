@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class AppThemes {
   // Primary color for both themes
   static const Color primaryColor = Color(0xFFFEC62B);
+  static int _colorChannelToInt(double value) =>
+      (value * 255.0).round().clamp(0, 255);
   
   // Light theme colors
   static final Color lightScaffoldColor = Colors.grey[50]!;
@@ -28,7 +30,9 @@ class AppThemes {
   static MaterialColor createMaterialColor(Color color) {
     List<double> strengths = <double>[.05, .1, .2, .3, .4, .5, .6, .7, .8, .9];
     Map<int, Color> swatch = <int, Color>{};
-    final int r = color.red, g = color.green, b = color.blue;
+    final int r = _colorChannelToInt(color.r);
+    final int g = _colorChannelToInt(color.g);
+    final int b = _colorChannelToInt(color.b);
 
     for (var strength in strengths) {
       final double ds = 0.5 - strength;
@@ -39,7 +43,7 @@ class AppThemes {
         1,
       );
     }
-    return MaterialColor(color.value, swatch);
+    return MaterialColor(color.toARGB32(), swatch);
   }
 
   // Light theme
@@ -118,7 +122,7 @@ class AppThemes {
         vertical: 16,
       ),
       labelStyle: TextStyle(color: lightSecondaryTextColor),
-      hintStyle: TextStyle(color: lightSecondaryTextColor.withOpacity(0.7)),
+      hintStyle: TextStyle(color: lightSecondaryTextColor.withValues(alpha: 0.7)),
     ),
     cardTheme: CardThemeData(
       color: lightCardColor,
@@ -126,7 +130,7 @@ class AppThemes {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
-      shadowColor: Colors.black.withOpacity(0.1),
+      shadowColor: Colors.black.withValues(alpha: 0.1),
     ),
     dividerTheme: DividerThemeData(
       color: lightDividerColor,
@@ -243,7 +247,7 @@ class AppThemes {
         vertical: 16,
       ),
       labelStyle: TextStyle(color: darkSecondaryTextColor),
-      hintStyle: TextStyle(color: darkSecondaryTextColor.withOpacity(0.7)),
+      hintStyle: TextStyle(color: darkSecondaryTextColor.withValues(alpha: 0.7)),
     ),
     cardTheme: CardThemeData(
       color: darkCardColor,
@@ -251,7 +255,7 @@ class AppThemes {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
-      shadowColor: Colors.black.withOpacity(0.3),
+      shadowColor: Colors.black.withValues(alpha: 0.3),
     ),
     dividerTheme: DividerThemeData(
       color: darkDividerColor,

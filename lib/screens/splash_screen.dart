@@ -146,7 +146,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             colors: isDarkMode
                 ? [
                     theme.scaffoldBackgroundColor,
-                    theme.scaffoldBackgroundColor.withOpacity(0.8),
+                    theme.scaffoldBackgroundColor.withValues(alpha: 0.8),
                   ]
                 : [
                     primaryColor,
@@ -216,7 +216,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                               decoration: BoxDecoration(
                                 color: isDarkMode 
-                                    ? theme.cardTheme.color!.withOpacity(0.3) 
+                                    ? theme.cardTheme.color!.withValues(alpha: 0.3) 
                                     : Colors.white.withAlpha(40),
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
@@ -314,11 +314,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       margin: const EdgeInsets.symmetric(horizontal: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isDarkMode ? theme.cardTheme.color!.withOpacity(0.7) : Colors.white.withAlpha(200),
+        color: isDarkMode ? theme.cardTheme.color!.withValues(alpha: 0.7) : Colors.white.withAlpha(200),
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 5,
           ),

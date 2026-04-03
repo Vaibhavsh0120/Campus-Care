@@ -50,7 +50,7 @@ class ItemCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -71,7 +71,7 @@ class ItemCard extends StatelessWidget {
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
-                                color: theme.primaryColor.withOpacity(0.1),
+                                color: theme.primaryColor.withValues(alpha: 0.1),
                                 child: Center(
                                   child: Icon(
                                     Icons.fastfood,
@@ -83,7 +83,7 @@ class ItemCard extends StatelessWidget {
                             },
                           )
                         : Container(
-                            color: theme.primaryColor.withOpacity(0.1),
+                            color: theme.primaryColor.withValues(alpha: 0.1),
                             child: Center(
                               child: Icon(
                                 Icons.fastfood,
@@ -106,7 +106,7 @@ class ItemCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(isSmallMobile ? 16 : 20),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -126,7 +126,7 @@ class ItemCard extends StatelessWidget {
                     if (!item.availableToday)
                       Positioned.fill(
                         child: Container(
-                          color: Colors.black.withOpacity(0.6),
+                          color: Colors.black.withValues(alpha: 0.6),
                           child: Center(
                             child: Text(
                               'Not Available Today',
@@ -175,7 +175,7 @@ class ItemCard extends StatelessWidget {
                       Text(
                         item.description!,
                         style: TextStyle(
-                          color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.7) : Colors.grey[600],
+                          color: isDarkMode ? theme.colorScheme.onSurface.withValues(alpha: 0.7) : Colors.grey[600],
                           fontSize: descriptionFontSize,
                         ),
                         maxLines: 2,
@@ -246,7 +246,7 @@ class ItemCard extends StatelessWidget {
               width: height,
               height: height,
               decoration: BoxDecoration(
-                color: theme.primaryColor.withOpacity(0.8),
+                color: theme.primaryColor.withValues(alpha: 0.8),
               ),
               child: Icon(
                 Icons.remove,
@@ -273,7 +273,7 @@ class ItemCard extends StatelessWidget {
               width: height,
               height: height,
               decoration: BoxDecoration(
-                color: theme.primaryColor.withOpacity(0.8),
+                color: theme.primaryColor.withValues(alpha: 0.8),
               ),
               child: Icon(
                 Icons.add,

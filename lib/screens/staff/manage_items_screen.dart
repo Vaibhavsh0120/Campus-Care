@@ -375,7 +375,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                           ),
                         ),
                         value: availableToday,
-                        activeColor: primaryColor,
+                        activeThumbColor: primaryColor,
                         contentPadding: EdgeInsets.zero,
                         onChanged: (value) {
                           setState(() {
@@ -621,7 +621,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                       color: isDarkMode ? theme.cardTheme.color : Colors.white,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.05),
+                          color: Colors.black.withValues(alpha: isDarkMode ? 0.2 : 0.05),
                           blurRadius: 5,
                           offset: const Offset(0, 2),
                         ),
@@ -690,7 +690,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                     ),
                                   ),
                                   value: _showOnlyAvailable,
-                                  activeColor: primaryColor,
+                                  activeThumbColor: primaryColor,
                                   contentPadding: EdgeInsets.zero,
                                   dense: true,
                                   onChanged: (value) {
@@ -770,7 +770,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                   ),
                                 ),
                                 value: _showOnlyAvailable,
-                                activeColor: primaryColor,
+                                activeThumbColor: primaryColor,
                                 contentPadding: EdgeInsets.zero,
                                 dense: true,
                                 onChanged: (value) {
@@ -1022,7 +1022,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                         // Toggle availability button
                         Container(
                           decoration: BoxDecoration(
-                            color: item.availableToday ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+                            color: item.availableToday ? Colors.green.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: IconButton(

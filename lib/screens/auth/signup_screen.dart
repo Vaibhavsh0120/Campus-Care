@@ -13,7 +13,8 @@ class SignupScreen extends StatefulWidget {
   State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderStateMixin {
+class _SignupScreenState extends State<SignupScreen>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -27,20 +28,20 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-    
+
     // Setup animations
     _animController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animController,
         curve: Curves.easeIn,
       ),
     );
-    
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.5),
       end: Offset.zero,
@@ -50,7 +51,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
         curve: Curves.easeOut,
       ),
     );
-    
+
     _animController.forward();
   }
 
@@ -66,12 +67,12 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
   Future<void> _signup() async {
     if (_formKey.currentState!.validate()) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      
+
       final success = await authProvider.signUp(
         _emailController.text.trim(),
         _passwordController.text,
       );
-      
+
       if (success && mounted) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -82,9 +83,9 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
 
   Future<void> _signupWithGoogle() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    
+
     await authProvider.signInWithGoogle();
-    
+
     // Note: The actual navigation will happen after the OAuth redirect
     // is handled and the session is restored
   }
@@ -95,23 +96,35 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
     final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    
+
     // Responsive breakpoints - FIXED to use only width, not kIsWeb
     final isSmallMobile = size.width < 360;
     final isTablet = size.width >= 600 && size.width < 900;
     final isDesktop = size.width >= 900;
-    
+
     // Adjust font sizes based on screen size
-    final double logoSize = isSmallMobile ? 60 : isTablet ? 90 : 80;
-    final double titleSize = isSmallMobile ? 28 : isTablet ? 40 : 36;
+    final double logoSize = isSmallMobile
+        ? 60
+        : isTablet
+            ? 90
+            : 80;
+    final double titleSize = isSmallMobile
+        ? 28
+        : isTablet
+            ? 40
+            : 36;
     final double taglineSize = isSmallMobile ? 14 : 16;
     final double headerSize = isSmallMobile ? 20 : 24;
     final double buttonHeight = isSmallMobile ? 48 : 56;
-    
+
     // Adjust padding based on screen size
-    final double horizontalPadding = isSmallMobile ? 16 : isTablet ? 32 : 24;
+    final double horizontalPadding = isSmallMobile
+        ? 16
+        : isTablet
+            ? 32
+            : 24;
     final double verticalPadding = isSmallMobile ? 16 : 24;
-    
+
     // Layout for desktop (side-by-side)
     if (isDesktop) {
       return Scaffold(
@@ -122,7 +135,9 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
               Expanded(
                 flex: 5,
                 child: Container(
-                  color: isDarkMode ? theme.scaffoldBackgroundColor.withOpacity(0.7) : theme.primaryColor.withOpacity(0.1),
+                  color: isDarkMode
+                      ? theme.scaffoldBackgroundColor.withValues(alpha: 0.7)
+                      : theme.primaryColor.withValues(alpha: 0.1),
                   child: Center(
                     child: SingleChildScrollView(
                       padding: EdgeInsets.all(horizontalPadding),
@@ -133,7 +148,9 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                           Container(
                             padding: const EdgeInsets.all(30),
                             decoration: BoxDecoration(
-                              color: isDarkMode ? theme.primaryColor.withOpacity(0.1) : theme.primaryColor.withOpacity(0.2),
+                              color: isDarkMode
+                                  ? theme.primaryColor.withValues(alpha: 0.1)
+                                  : theme.primaryColor.withValues(alpha: 0.2),
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
@@ -143,7 +160,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                             ),
                           ),
                           const SizedBox(height: 32),
-                          
+
                           // App Name with enhanced typography
                           Text(
                             'Campus Care',
@@ -156,29 +173,34 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 16),
-                          
+
                           // Tagline with enhanced design
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 12),
                             decoration: BoxDecoration(
-                              color: isDarkMode ? theme.primaryColor.withOpacity(0.1) : theme.primaryColor.withOpacity(0.1),
+                              color: isDarkMode
+                                  ? theme.primaryColor.withValues(alpha: 0.1)
+                                  : theme.primaryColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(30),
                               border: Border.all(
-                                color: theme.primaryColor.withOpacity(0.3),
+                                color: theme.primaryColor.withValues(alpha: 0.3),
                               ),
                             ),
                             child: Text(
                               'Order food from your campus cafeteria',
                               style: TextStyle(
                                 fontSize: taglineSize * 1.2,
-                                color: isDarkMode ? theme.colorScheme.onSurface : Colors.grey[800],
+                                color: isDarkMode
+                                    ? theme.colorScheme.onSurface
+                                    : Colors.grey[800],
                                 fontWeight: FontWeight.w500,
                               ),
                               textAlign: TextAlign.center,
                             ),
                           ),
                           const SizedBox(height: 32),
-                          
+
                           // Additional information or features for desktop
                           Wrap(
                             spacing: 16,
@@ -188,7 +210,8 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                               _buildFeatureCard(
                                 icon: Icons.restaurant,
                                 title: 'Campus Menu',
-                                description: 'Browse daily specials and regular items',
+                                description:
+                                    'Browse daily specials and regular items',
                                 isDarkMode: isDarkMode,
                                 theme: theme,
                               ),
@@ -214,7 +237,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                   ),
                 ),
               ),
-              
+
               // Right side - Signup form (1/2 of screen)
               Expanded(
                 flex: 5,
@@ -243,7 +266,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                         ),
                       ),
                     ),
-                    
+
                     // Theme toggle button in the top right corner
                     const Positioned(
                       top: 16,
@@ -265,7 +288,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
         ),
       );
     }
-    
+
     // Mobile and tablet layout (vertical)
     return Scaffold(
       body: SafeArea(
@@ -291,7 +314,9 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                             child: Container(
                               padding: EdgeInsets.all(isSmallMobile ? 15 : 20),
                               decoration: BoxDecoration(
-                                color: isDarkMode ? theme.primaryColor.withOpacity(0.1) : theme.primaryColor.withOpacity(0.1),
+                                color: isDarkMode
+                                    ? theme.primaryColor.withValues(alpha: 0.1)
+                                    : theme.primaryColor.withValues(alpha: 0.1),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
@@ -302,7 +327,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                             ),
                           ),
                           SizedBox(height: isSmallMobile ? 16 : 24),
-                          
+
                           // App Name with enhanced typography
                           Text(
                             'Campus Care',
@@ -315,7 +340,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(height: isSmallMobile ? 4 : 8),
-                          
+
                           // Tagline with enhanced design
                           Container(
                             padding: EdgeInsets.symmetric(
@@ -323,20 +348,29 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                               vertical: isSmallMobile ? 6 : 8,
                             ),
                             decoration: BoxDecoration(
-                              color: isDarkMode ? theme.primaryColor.withOpacity(0.1) : theme.primaryColor.withOpacity(0.1),
+                              color: isDarkMode
+                                  ? theme.primaryColor.withValues(alpha: 0.1)
+                                  : theme.primaryColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
                               'Order food from your campus cafeteria',
                               style: TextStyle(
                                 fontSize: taglineSize,
-                                color: isDarkMode ? theme.colorScheme.onSurface : Colors.grey[800],
+                                color: isDarkMode
+                                    ? theme.colorScheme.onSurface
+                                    : Colors.grey[800],
                               ),
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          SizedBox(height: isSmallMobile ? 32 : isTablet ? 64 : 48),
-                          
+                          SizedBox(
+                              height: isSmallMobile
+                                  ? 32
+                                  : isTablet
+                                      ? 64
+                                      : 48),
+
                           // Signup Form
                           _buildSignupForm(
                             authProvider: authProvider,
@@ -354,7 +388,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                 ),
               ),
             ),
-            
+
             // Theme toggle button in the top right corner
             const Positioned(
               top: 16,
@@ -373,7 +407,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
       ),
     );
   }
-  
+
   Widget _buildFeatureCard({
     required IconData icon,
     required String title,
@@ -389,7 +423,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -417,7 +451,9 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
             description,
             style: TextStyle(
               fontSize: 14,
-              color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.7) : Colors.grey[600],
+              color: isDarkMode
+                  ? theme.colorScheme.onSurface.withValues(alpha: 0.7)
+                  : Colors.grey[600],
             ),
             textAlign: TextAlign.center,
           ),
@@ -425,7 +461,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
       ),
     );
   }
-  
+
   Widget _buildSignupForm({
     required AuthProvider authProvider,
     required double headerSize,
@@ -454,7 +490,9 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
-                      color: isDarkMode ? theme.dividerTheme.color! : Colors.grey[200]!,
+                      color: isDarkMode
+                          ? theme.dividerTheme.color!
+                          : Colors.grey[200]!,
                       width: 1,
                     ),
                   ),
@@ -475,14 +513,16 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                       'Sign up to get started',
                       style: TextStyle(
                         fontSize: 14,
-                        color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.7) : Colors.grey[600],
+                        color: isDarkMode
+                            ? theme.colorScheme.onSurface.withValues(alpha: 0.7)
+                            : Colors.grey[600],
                       ),
                     ),
                   ],
                 ),
               ),
               SizedBox(height: verticalPadding),
-              
+
               // Email Field with enhanced design
               TextFormField(
                 controller: _emailController,
@@ -497,7 +537,9 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                     borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
-                  fillColor: isDarkMode ? theme.inputDecorationTheme.fillColor : Colors.grey[50],
+                  fillColor: isDarkMode
+                      ? theme.inputDecorationTheme.fillColor
+                      : Colors.grey[50],
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 16,
                     horizontal: 16,
@@ -509,7 +551,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                 style: TextStyle(color: theme.colorScheme.onSurface),
               ),
               const SizedBox(height: 16),
-              
+
               // Password Field with enhanced design
               TextFormField(
                 controller: _passwordController,
@@ -524,7 +566,9 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                     borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
-                  fillColor: isDarkMode ? theme.inputDecorationTheme.fillColor : Colors.grey[50],
+                  fillColor: isDarkMode
+                      ? theme.inputDecorationTheme.fillColor
+                      : Colors.grey[50],
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 16,
                     horizontal: 16,
@@ -534,7 +578,9 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                       _obscurePassword
                           ? Icons.visibility_outlined
                           : Icons.visibility_off_outlined,
-                      color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.7) : Colors.grey[600],
+                      color: isDarkMode
+                          ? theme.colorScheme.onSurface.withValues(alpha: 0.7)
+                          : Colors.grey[600],
                     ),
                     onPressed: () {
                       setState(() {
@@ -549,7 +595,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                 style: TextStyle(color: theme.colorScheme.onSurface),
               ),
               const SizedBox(height: 16),
-              
+
               // Confirm Password Field with enhanced design
               TextFormField(
                 controller: _confirmPasswordController,
@@ -564,7 +610,9 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                     borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
-                  fillColor: isDarkMode ? theme.inputDecorationTheme.fillColor : Colors.grey[50],
+                  fillColor: isDarkMode
+                      ? theme.inputDecorationTheme.fillColor
+                      : Colors.grey[50],
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 16,
                     horizontal: 16,
@@ -574,7 +622,9 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                       _obscureConfirmPassword
                           ? Icons.visibility_outlined
                           : Icons.visibility_off_outlined,
-                      color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.7) : Colors.grey[600],
+                      color: isDarkMode
+                          ? theme.colorScheme.onSurface.withValues(alpha: 0.7)
+                          : Colors.grey[600],
                     ),
                     onPressed: () {
                       setState(() {
@@ -595,7 +645,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                 style: TextStyle(color: theme.colorScheme.onSurface),
               ),
               SizedBox(height: verticalPadding),
-              
+
               // Error Message with enhanced design
               if (authProvider.error != null)
                 Container(
@@ -604,9 +654,13 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                     horizontal: 16,
                   ),
                   decoration: BoxDecoration(
-                    color: isDarkMode ? Colors.red.withOpacity(0.2) : Colors.red[50],
+                    color: isDarkMode
+                        ? Colors.red.withValues(alpha: 0.2)
+                        : Colors.red[50],
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: isDarkMode ? Colors.red[700]! : Colors.red[200]!),
+                    border: Border.all(
+                        color:
+                            isDarkMode ? Colors.red[700]! : Colors.red[200]!),
                   ),
                   child: Row(
                     children: [
@@ -619,15 +673,17 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                       Expanded(
                         child: Text(
                           authProvider.error!,
-                          style: TextStyle(color: isDarkMode ? Colors.red[300] : Colors.red[700]),
+                          style: TextStyle(
+                              color: isDarkMode
+                                  ? Colors.red[300]
+                                  : Colors.red[700]),
                         ),
                       ),
                     ],
                   ),
                 ),
-              if (authProvider.error != null)
-                const SizedBox(height: 16),
-              
+              if (authProvider.error != null) const SizedBox(height: 16),
+
               // Signup Button with enhanced design
               SizedBox(
                 height: buttonHeight,
@@ -660,41 +716,50 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // OR Divider with enhanced design
               Row(
                 children: [
                   Expanded(
                     child: Divider(
-                      color: isDarkMode ? theme.dividerTheme.color : Colors.grey[300],
+                      color: isDarkMode
+                          ? theme.dividerTheme.color
+                          : Colors.grey[300],
                       thickness: 1,
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 16),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isDarkMode ? theme.cardTheme.color!.withOpacity(0.3) : Colors.grey[100],
+                      color: isDarkMode
+                          ? theme.cardTheme.color!.withValues(alpha: 0.3)
+                          : Colors.grey[100],
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       'OR',
                       style: TextStyle(
-                        color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.7) : Colors.grey[600],
+                        color: isDarkMode
+                            ? theme.colorScheme.onSurface.withValues(alpha: 0.7)
+                            : Colors.grey[600],
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   Expanded(
                     child: Divider(
-                      color: isDarkMode ? theme.dividerTheme.color : Colors.grey[300],
+                      color: isDarkMode
+                          ? theme.dividerTheme.color
+                          : Colors.grey[300],
                       thickness: 1,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              
+
               // Google Signup Button with enhanced design
               SizedBox(
                 height: buttonHeight,
@@ -709,20 +774,26 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    side: BorderSide(color: isDarkMode ? theme.dividerTheme.color! : Colors.grey[300]!),
+                    side: BorderSide(
+                        color: isDarkMode
+                            ? theme.dividerTheme.color!
+                            : Colors.grey[300]!),
                     foregroundColor: theme.primaryColor,
                   ),
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Login Link with enhanced design
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     'Already have an account?',
-                    style: TextStyle(color: isDarkMode ? theme.colorScheme.onSurface.withOpacity(0.7) : Colors.grey[600]),
+                    style: TextStyle(
+                        color: isDarkMode
+                            ? theme.colorScheme.onSurface.withValues(alpha: 0.7)
+                            : Colors.grey[600]),
                   ),
                   TextButton(
                     onPressed: () {

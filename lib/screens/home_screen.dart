@@ -93,6 +93,7 @@ class _HomeScreenState extends State<HomeScreen>
 
       if (authProvider.isAuthenticated) {
         itemProvider.loadItems().then((_) {
+          if (!mounted) return;
           _selectRandomRecommendations(itemProvider.items);
           setState(() {});
         });
@@ -376,11 +377,10 @@ class _HomeScreenState extends State<HomeScreen>
                   onPressed: () async {
                     await Provider.of<AuthProvider>(context, listen: false)
                         .signOut();
-                    if (mounted) {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => const LoginScreen()),
-                      );
-                    }
+                    if (!context.mounted) return;
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    );
                   },
                 ),
             ],
@@ -407,15 +407,15 @@ class _HomeScreenState extends State<HomeScreen>
                       boxShadow: [
                         BoxShadow(
                           color: _searchQuery.isNotEmpty
-                              ? theme.primaryColor.withOpacity(0.2)
-                              : Colors.black.withOpacity(0.05),
+                              ? theme.primaryColor.withValues(alpha: 0.2)
+                              : Colors.black.withValues(alpha: 0.05),
                           blurRadius: _searchQuery.isNotEmpty ? 8 : 4,
                           offset: const Offset(0, 2),
                         ),
                       ],
                       border: Border.all(
                         color: _searchQuery.isNotEmpty
-                            ? theme.primaryColor.withOpacity(0.5)
+                            ? theme.primaryColor.withValues(alpha: 0.5)
                             : isDarkMode ? Colors.grey[700]! : Colors.grey[200]!,
                         width: _searchQuery.isNotEmpty ? 1.5 : 1,
                       ),
@@ -645,11 +645,11 @@ class _HomeScreenState extends State<HomeScreen>
           colors: isDarkMode
               ? [
                   theme.scaffoldBackgroundColor,
-                  theme.scaffoldBackgroundColor.withOpacity(0.8),
+                  theme.scaffoldBackgroundColor.withValues(alpha: 0.8),
                 ]
               : [
-                  theme.primaryColor.withOpacity(0.8),
-                  theme.primaryColor.withOpacity(0.6),
+                  theme.primaryColor.withValues(alpha: 0.8),
+                  theme.primaryColor.withValues(alpha: 0.6),
                 ],
         ),
       ),
