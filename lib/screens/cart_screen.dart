@@ -13,39 +13,40 @@ class CartScreen extends StatefulWidget {
   State<CartScreen> createState() => _CartScreenState();
 }
 
-class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateMixin {
+class _CartScreenState extends State<CartScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     // Setup animation
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Curves.easeIn,
       ),
     );
-    
+
     _animationController.forward();
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final cartProvider = Provider.of<CartProvider>(context, listen: false);
-      
+
       if (authProvider.isAuthenticated) {
         cartProvider.loadCartItems(authProvider.user!.id);
       }
     });
   }
-  
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -58,20 +59,48 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
     final isDarkMode = theme.brightness == Brightness.dark;
-    
+
     // Responsive breakpoints - FIXED to use only width, not kIsWeb
     final isSmallMobile = size.width < 360;
     final isMobile = size.width < 600;
     final isTablet = size.width >= 600 && size.width < 900;
     final isDesktop = size.width >= 900;
-    
+
     // Adjust font sizes and spacing based on screen size
-    final double titleSize = isSmallMobile ? 18 : isTablet ? 24 : 22;
-    final double emptyCartImageSize = isSmallMobile ? 150 : isTablet ? 300 : isDesktop ? 250 : 200;
-    final double emptyCartTextSize = isSmallMobile ? 18 : isTablet ? 26 : isDesktop ? 24 : 20;
-    final double emptyCartSubtextSize = isSmallMobile ? 14 : isTablet ? 20 : isDesktop ? 18 : 16;
-    final double buttonPadding = isSmallMobile ? 16 : isTablet ? 36 : isDesktop ? 32 : 24;
-    
+    final double titleSize = isSmallMobile
+        ? 18
+        : isTablet
+            ? 24
+            : 22;
+    final double emptyCartImageSize = isSmallMobile
+        ? 150
+        : isTablet
+            ? 300
+            : isDesktop
+                ? 250
+                : 200;
+    final double emptyCartTextSize = isSmallMobile
+        ? 18
+        : isTablet
+            ? 26
+            : isDesktop
+                ? 24
+                : 20;
+    final double emptyCartSubtextSize = isSmallMobile
+        ? 14
+        : isTablet
+            ? 20
+            : isDesktop
+                ? 18
+                : 16;
+    final double buttonPadding = isSmallMobile
+        ? 16
+        : isTablet
+            ? 36
+            : isDesktop
+                ? 32
+                : 24;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -97,8 +126,8 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
                 ),
               )
             : _buildCartContent(
-                cartProvider, 
-                theme, 
+                cartProvider,
+                theme,
                 isSmallMobile,
                 isMobile,
                 isTablet,
@@ -111,8 +140,8 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
               ),
       ),
       bottomNavigationBar: _buildBottomBar(
-        cartProvider, 
-        theme, 
+        cartProvider,
+        theme,
         isSmallMobile,
         isMobile,
         isTablet,
@@ -123,7 +152,7 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
   }
 
   Widget _buildCartContent(
-    CartProvider cartProvider, 
+    CartProvider cartProvider,
     ThemeData theme,
     bool isSmallMobile,
     bool isMobile,
@@ -160,7 +189,8 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () {
-                final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                final authProvider =
+                    Provider.of<AuthProvider>(context, listen: false);
                 cartProvider.loadCartItems(authProvider.user!.id);
               },
               icon: const Icon(Icons.refresh),
@@ -178,7 +208,7 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
         ),
       );
     }
-    
+
     if (cartProvider.cartItems.isEmpty) {
       return Center(
         child: Column(
@@ -216,7 +246,11 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(
                   horizontal: buttonPadding,
-                  vertical: isSmallMobile ? 10 : isTablet ? 18 : 12,
+                  vertical: isSmallMobile
+                      ? 10
+                      : isTablet
+                          ? 18
+                          : 12,
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -229,7 +263,7 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
         ),
       );
     }
-    
+
     final size = MediaQuery.of(context).size;
     // Desktop and large tablet layout (side-by-side)
     if (isDesktop || (isTablet && size.width >= 768)) {
@@ -251,7 +285,7 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
               },
             ),
           ),
-          
+
           // Order summary (1/3 of the screen)
           Expanded(
             flex: 1,
@@ -296,15 +330,18 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
                     ],
                   ),
                   SizedBox(height: isSmallMobile ? 16 : 24),
-                  
+
                   // Items count with enhanced design
                   Container(
                     padding: EdgeInsets.all(isSmallMobile ? 12 : 16),
                     decoration: BoxDecoration(
-                      color: isDarkMode ? theme.colorScheme.surface : Colors.grey[50],
+                      color: isDarkMode
+                          ? theme.colorScheme.surface
+                          : Colors.grey[50],
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: isDarkMode ? Colors.grey[800]! : Colors.grey[200]!,
+                        color:
+                            isDarkMode ? Colors.grey[800]! : Colors.grey[200]!,
                       ),
                     ),
                     child: Row(
@@ -314,7 +351,9 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
                           'Items (${cartProvider.cartItems.length})',
                           style: TextStyle(
                             fontSize: isSmallMobile ? 14 : 16,
-                            color: isDarkMode ? Colors.grey[300] : Colors.grey[700],
+                            color: isDarkMode
+                                ? Colors.grey[300]
+                                : Colors.grey[700],
                           ),
                         ),
                         Text(
@@ -322,23 +361,26 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
                           style: TextStyle(
                             fontSize: isSmallMobile ? 14 : 16,
                             fontWeight: FontWeight.w500,
-                            color: isDarkMode ? Colors.grey[200] : Colors.grey[800],
+                            color: isDarkMode
+                                ? Colors.grey[200]
+                                : Colors.grey[800],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  
+
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: isSmallMobile ? 12 : 16),
+                    padding:
+                        EdgeInsets.symmetric(vertical: isSmallMobile ? 12 : 16),
                     child: const Divider(),
                   ),
-                  
+
                   // Total with enhanced design
                   Container(
                     padding: EdgeInsets.all(isSmallMobile ? 12 : 16),
                     decoration: BoxDecoration(
-                      color: isDarkMode 
+                      color: isDarkMode
                           ? theme.colorScheme.surface
                           : const Color(0xFFFEC62B).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -367,7 +409,8 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFFEC62B).withValues(alpha: 0.3),
+                                color: const Color(0xFFFEC62B)
+                                    .withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -385,9 +428,9 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
                       ],
                     ),
                   ),
-                  
+
                   const Spacer(),
-                  
+
                   // Checkout button with enhanced design
                   SizedBox(
                     width: double.infinity,
@@ -419,7 +462,7 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
         ],
       );
     }
-    
+
     // Mobile layout with enhanced design
     return ListView.builder(
       padding: EdgeInsets.all(isSmallMobile ? 12 : 16),
@@ -435,7 +478,7 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
   }
 
   Widget _buildBottomBar(
-    CartProvider cartProvider, 
+    CartProvider cartProvider,
     ThemeData theme,
     bool isSmallMobile,
     bool isMobile,
@@ -444,10 +487,12 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
     bool isDarkMode,
   ) {
     // Don't show bottom bar for empty cart or desktop layout
-    if (cartProvider.cartItems.isEmpty || isDesktop || (isTablet && MediaQuery.of(context).size.width >= 768)) {
+    if (cartProvider.cartItems.isEmpty ||
+        isDesktop ||
+        (isTablet && MediaQuery.of(context).size.width >= 768)) {
       return const SizedBox.shrink();
     }
-    
+
     return Container(
       padding: EdgeInsets.all(isSmallMobile ? 12 : 16),
       decoration: BoxDecoration(
@@ -537,7 +582,8 @@ class _CartScreenState extends State<CartScreen> with SingleTickerProviderStateM
                     );
                   },
                   icon: const Icon(Icons.shopping_cart_checkout),
-                  label: Text(isSmallMobile ? 'Checkout' : 'Proceed to Checkout'),
+                  label:
+                      Text(isSmallMobile ? 'Checkout' : 'Proceed to Checkout'),
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(
                       horizontal: isSmallMobile ? 16 : 24,

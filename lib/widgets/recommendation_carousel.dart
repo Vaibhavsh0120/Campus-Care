@@ -37,13 +37,17 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
 
   void _startAutoScroll() {
     Future.delayed(const Duration(seconds: 5), () {
-      if (mounted && _pageController.hasClients && widget.recommendedItems.length > 1) {
+      if (mounted &&
+          _pageController.hasClients &&
+          widget.recommendedItems.length > 1) {
         final nextPage = (_pageController.page?.toInt() ?? 0) + 1;
-        _pageController.animateToPage(
+        _pageController
+            .animateToPage(
           nextPage % widget.recommendedItems.length,
           duration: const Duration(milliseconds: 800),
           curve: Curves.easeInOut,
-        ).then((_) {
+        )
+            .then((_) {
           if (mounted) {
             _startAutoScroll();
           }
@@ -65,24 +69,78 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
     final cartProvider = Provider.of<CartProvider>(context);
     final size = MediaQuery.of(context).size;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
+
     // Responsive breakpoints
     final isSmallMobile = size.width < 360;
     final isTablet = size.width >= 600 && size.width < 900;
     final isDesktop = size.width >= 900;
-    
+
     // Adjust sizes based on screen dimensions
     // Make carousel significantly larger on desktop
-    final double carouselHeight = isDesktop ? 200 : isTablet ? 180 : isSmallMobile ? 140 : 160;
-    final double imageWidth = isDesktop ? 160 : isTablet ? 140 : isSmallMobile ? 80 : 100;
-    final double titleFontSize = isDesktop ? 18 : isTablet ? 18 : isSmallMobile ? 14 : 16;
-    final double descriptionFontSize = isDesktop ? 14 : isTablet ? 14 : isSmallMobile ? 10 : 12;
-    final double priceFontSize = isDesktop ? 16 : isTablet ? 16 : isSmallMobile ? 12 : 14;
-    final double buttonFontSize = isDesktop ? 14 : isTablet ? 14 : isSmallMobile ? 10 : 12;
-    final double headerFontSize = isDesktop ? 16 : isTablet ? 16 : isSmallMobile ? 12 : 14;
-    final double iconSize = isDesktop ? 20 : isTablet ? 20 : isSmallMobile ? 14 : 18;
-    final double padding = isDesktop ? 16 : isTablet ? 16 : isSmallMobile ? 8 : 12;
-    
+    final double carouselHeight = isDesktop
+        ? 200
+        : isTablet
+            ? 180
+            : isSmallMobile
+                ? 140
+                : 160;
+    final double imageWidth = isDesktop
+        ? 160
+        : isTablet
+            ? 140
+            : isSmallMobile
+                ? 80
+                : 100;
+    final double titleFontSize = isDesktop
+        ? 18
+        : isTablet
+            ? 18
+            : isSmallMobile
+                ? 14
+                : 16;
+    final double descriptionFontSize = isDesktop
+        ? 14
+        : isTablet
+            ? 14
+            : isSmallMobile
+                ? 10
+                : 12;
+    final double priceFontSize = isDesktop
+        ? 16
+        : isTablet
+            ? 16
+            : isSmallMobile
+                ? 12
+                : 14;
+    final double buttonFontSize = isDesktop
+        ? 14
+        : isTablet
+            ? 14
+            : isSmallMobile
+                ? 10
+                : 12;
+    final double headerFontSize = isDesktop
+        ? 16
+        : isTablet
+            ? 16
+            : isSmallMobile
+                ? 12
+                : 14;
+    final double iconSize = isDesktop
+        ? 20
+        : isTablet
+            ? 20
+            : isSmallMobile
+                ? 14
+                : 18;
+    final double padding = isDesktop
+        ? 16
+        : isTablet
+            ? 16
+            : isSmallMobile
+                ? 8
+                : 12;
+
     return Container(
       width: double.infinity,
       height: carouselHeight,
@@ -97,7 +155,8 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
           ),
         ],
         border: Border.all(
-          color: isDarkMode ? widget.theme.dividerTheme.color! : Colors.grey[200]!,
+          color:
+              isDarkMode ? widget.theme.dividerTheme.color! : Colors.grey[200]!,
           width: 1,
         ),
       ),
@@ -107,21 +166,22 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
           // Header with enhanced design - Changed background color for dark mode
           Container(
             padding: EdgeInsets.symmetric(
-              horizontal: padding, 
-              vertical: isSmallMobile ? 6 : 8
-            ),
+                horizontal: padding, vertical: isSmallMobile ? 6 : 8),
             decoration: BoxDecoration(
-              color: isDarkMode 
-                  ? widget.theme.cardTheme.color // Use card color instead of primary color with opacity
-                  : widget.theme.primaryColor.withValues(
-                      alpha: widget.theme.primaryColor.a * 0.05),
+              color: isDarkMode
+                  ? widget.theme.cardTheme
+                      .color // Use card color instead of primary color with opacity
+                  : widget.theme.primaryColor
+                      .withValues(alpha: widget.theme.primaryColor.a * 0.05),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
               ),
               border: Border(
                 bottom: BorderSide(
-                  color: isDarkMode ? widget.theme.dividerTheme.color! : Colors.grey[200]!,
+                  color: isDarkMode
+                      ? widget.theme.dividerTheme.color!
+                      : Colors.grey[200]!,
                   width: 1,
                 ),
               ),
@@ -138,7 +198,9 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                   'Recommended for you',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: isDarkMode ? widget.theme.colorScheme.onSurface : Colors.grey[800],
+                    color: isDarkMode
+                        ? widget.theme.colorScheme.onSurface
+                        : Colors.grey[800],
                     fontSize: headerFontSize,
                   ),
                 ),
@@ -157,14 +219,18 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                             Icon(
                               Icons.swipe,
                               size: isSmallMobile ? 12 : 14,
-                              color: isDarkMode ? Colors.grey[500] : Colors.grey[400],
+                              color: isDarkMode
+                                  ? Colors.grey[500]
+                                  : Colors.grey[400],
                             ),
                             SizedBox(width: isSmallMobile ? 2 : 4),
                             Text(
                               'Swipe',
                               style: TextStyle(
                                 fontSize: isSmallMobile ? 10 : 12,
-                                color: isDarkMode ? Colors.grey[500] : Colors.grey[400],
+                                color: isDarkMode
+                                    ? Colors.grey[500]
+                                    : Colors.grey[400],
                               ),
                             ),
                           ],
@@ -179,7 +245,7 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
               ],
             ),
           ),
-          
+
           // Carousel content
           Expanded(
             child: widget.recommendedItems.isEmpty
@@ -201,7 +267,9 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                         Text(
                           'Loading recommendations...',
                           style: TextStyle(
-                            color: isDarkMode ? Colors.grey[400] : Colors.grey[500],
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[500],
                             fontSize: isSmallMobile ? 12 : 14,
                           ),
                         ),
@@ -216,9 +284,8 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                       final item = widget.recommendedItems[index];
                       return Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: padding, 
-                          vertical: isSmallMobile ? 4 : 6
-                        ),
+                            horizontal: padding,
+                            vertical: isSmallMobile ? 4 : 6),
                         child: GestureDetector(
                           onTap: () {
                             // Find if this item is in the cart
@@ -232,10 +299,13 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                                 item: item,
                               ),
                             );
-                            
+
                             if (cartItem.quantity <= 0) {
                               cartProvider.addToCart(
-                                Provider.of<AuthProvider>(context, listen: false).user!.id,
+                                Provider.of<AuthProvider>(context,
+                                        listen: false)
+                                    .user!
+                                    .id,
                                 item,
                               );
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -251,11 +321,14 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: isDarkMode ? widget.theme.dividerTheme.color! : Colors.grey.shade200,
+                                color: isDarkMode
+                                    ? widget.theme.dividerTheme.color!
+                                    : Colors.grey.shade200,
                               ),
-                              color: isDarkMode 
+                              color: isDarkMode
                                   ? widget.theme.cardTheme.color!.withValues(
-                                      alpha: widget.theme.cardTheme.color!.a * 0.5) 
+                                      alpha:
+                                          widget.theme.cardTheme.color!.a * 0.5)
                                   : Colors.white,
                             ),
                             child: Row(
@@ -275,45 +348,60 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.black.withValues(
-                                              alpha: Colors.black.a * 0.1),
+                                                alpha: Colors.black.a * 0.1),
                                             blurRadius: 4,
                                             offset: const Offset(2, 0),
                                           ),
                                         ],
                                       ),
-                                      child: item.imageUrl != null && item.imageUrl!.isNotEmpty
+                                      child: item.imageUrl != null &&
+                                              item.imageUrl!.isNotEmpty
                                           ? Image.network(
                                               item.imageUrl!,
                                               fit: BoxFit.cover,
-                                              errorBuilder: (context, error, stackTrace) {
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
                                                 return Container(
-                                                  color: widget.theme.primaryColor.withValues(
-                                                    alpha: widget.theme.primaryColor.a * 0.1),
+                                                  color: widget
+                                                      .theme.primaryColor
+                                                      .withValues(
+                                                          alpha: widget
+                                                                  .theme
+                                                                  .primaryColor
+                                                                  .a *
+                                                              0.1),
                                                   child: Center(
                                                     child: Icon(
                                                       Icons.fastfood,
-                                                      size: isSmallMobile ? 24 : 30,
-                                                      color: widget.theme.primaryColor,
+                                                      size: isSmallMobile
+                                                          ? 24
+                                                          : 30,
+                                                      color: widget
+                                                          .theme.primaryColor,
                                                     ),
                                                   ),
                                                 );
                                               },
                                             )
                                           : Container(
-                                              color: widget.theme.primaryColor.withValues(
-                                                alpha: widget.theme.primaryColor.a * 0.1),
+                                              color: widget.theme.primaryColor
+                                                  .withValues(
+                                                      alpha: widget.theme
+                                                              .primaryColor.a *
+                                                          0.1),
                                               child: Center(
                                                 child: Icon(
                                                   Icons.fastfood,
                                                   size: isSmallMobile ? 24 : 30,
-                                                  color: widget.theme.primaryColor,
+                                                  color:
+                                                      widget.theme.primaryColor,
                                                 ),
                                               ),
                                             ),
                                     ),
                                   ),
                                 ),
-                                
+
                                 // Item details with enhanced layout
                                 Expanded(
                                   child: Padding(
@@ -322,8 +410,10 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                                       vertical: isSmallMobile ? 4 : 8,
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         // Item name with enhanced typography
                                         Text(
@@ -331,22 +421,34 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: titleFontSize,
-                                            color: isDarkMode ? widget.theme.colorScheme.onSurface : Colors.grey[800],
+                                            color: isDarkMode
+                                                ? widget
+                                                    .theme.colorScheme.onSurface
+                                                : Colors.grey[800],
                                           ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
-                                        
+
                                         // Item description with enhanced typography
-                                        if (item.description != null && item.description!.isNotEmpty)
+                                        if (item.description != null &&
+                                            item.description!.isNotEmpty)
                                           Padding(
-                                            padding: EdgeInsets.only(top: isSmallMobile ? 2 : 4),
-                                                child: Text(
-                                                  item.description!,
-                                                  style: TextStyle(
-                                                    color: isDarkMode 
-                                                    ? widget.theme.colorScheme.onSurface.withValues(
-                                                        alpha: widget.theme.colorScheme.onSurface.a * 0.7)
+                                            padding: EdgeInsets.only(
+                                                top: isSmallMobile ? 2 : 4),
+                                            child: Text(
+                                              item.description!,
+                                              style: TextStyle(
+                                                color: isDarkMode
+                                                    ? widget.theme.colorScheme
+                                                        .onSurface
+                                                        .withValues(
+                                                            alpha: widget
+                                                                    .theme
+                                                                    .colorScheme
+                                                                    .onSurface
+                                                                    .a *
+                                                                0.7)
                                                     : Colors.grey[600],
                                                 fontSize: descriptionFontSize,
                                               ),
@@ -354,48 +456,75 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
-                                          
+
                                         SizedBox(height: isSmallMobile ? 2 : 4),
-                                        
+
                                         // Price and add to cart button with enhanced design
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             // If we have limited width, stack the price and button vertically
-                                            if (constraints.maxWidth < (isSmallMobile ? 180 : isDesktop ? 280 : 220)) {
+                                            if (constraints.maxWidth <
+                                                (isSmallMobile
+                                                    ? 180
+                                                    : isDesktop
+                                                        ? 280
+                                                        : 220)) {
                                               return Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   // Price with enhanced typography
                                                   Container(
-                                                    margin: const EdgeInsets.only(bottom: 4),
-                                                    padding: EdgeInsets.symmetric(
-                                                      horizontal: isSmallMobile ? 6 : 8,
-                                                      vertical: isSmallMobile ? 2 : 4,
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            bottom: 4),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          isSmallMobile ? 6 : 8,
+                                                      vertical:
+                                                          isSmallMobile ? 2 : 4,
                                                     ),
                                                     decoration: BoxDecoration(
-                                                      color: widget.theme.primaryColor.withValues(
-                                                        alpha: widget.theme.primaryColor.a * 0.1),
-                                                      borderRadius: BorderRadius.circular(8),
+                                                      color: widget
+                                                          .theme.primaryColor
+                                                          .withValues(
+                                                              alpha: widget
+                                                                      .theme
+                                                                      .primaryColor
+                                                                      .a *
+                                                                  0.1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
                                                     ),
                                                     child: Text(
                                                       '₹${item.price.toStringAsFixed(2)}',
                                                       style: TextStyle(
-                                                        color: widget.theme.primaryColor,
-                                                        fontWeight: FontWeight.bold,
+                                                        color: widget
+                                                            .theme.primaryColor,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                         fontSize: priceFontSize,
                                                       ),
                                                     ),
                                                   ),
-                                                  
+
                                                   // Add to cart button with enhanced design - MADE BIGGER
                                                   SizedBox(
                                                     width: double.infinity,
                                                     child: ElevatedButton.icon(
                                                       onPressed: () {
-                                                        final cartItem = cartProvider.cartItems.firstWhere(
-                                                          (cartItem) => cartItem.itemId == item.id,
-                                                          orElse: () => CartItem(
+                                                        final cartItem =
+                                                            cartProvider
+                                                                .cartItems
+                                                                .firstWhere(
+                                                          (cartItem) =>
+                                                              cartItem.itemId ==
+                                                              item.id,
+                                                          orElse: () =>
+                                                              CartItem(
                                                             id: '',
                                                             userId: '',
                                                             itemId: item.id,
@@ -403,17 +532,32 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                                                             item: item,
                                                           ),
                                                         );
-                                                        
-                                                        if (cartItem.quantity <= 0) {
-                                                          cartProvider.addToCart(
-                                                            Provider.of<AuthProvider>(context, listen: false).user!.id,
+
+                                                        if (cartItem.quantity <=
+                                                            0) {
+                                                          cartProvider
+                                                              .addToCart(
+                                                            Provider.of<AuthProvider>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .user!
+                                                                .id,
                                                             item,
                                                           );
-                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
                                                             SnackBar(
-                                                              content: Text('${item.name} added to cart'),
-                                                              duration: const Duration(seconds: 2),
-                                                              behavior: SnackBarBehavior.floating,
+                                                              content: Text(
+                                                                  '${item.name} added to cart'),
+                                                              duration:
+                                                                  const Duration(
+                                                                      seconds:
+                                                                          2),
+                                                              behavior:
+                                                                  SnackBarBehavior
+                                                                      .floating,
                                                             ),
                                                           );
                                                         }
@@ -421,26 +565,55 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                                                       icon: Icon(
                                                         Icons.add_shopping_cart,
                                                         color: Colors.white,
-                                                        size: isSmallMobile ? 12 : isDesktop ? 16 : 14,
+                                                        size: isSmallMobile
+                                                            ? 12
+                                                            : isDesktop
+                                                                ? 16
+                                                                : 14,
                                                       ),
                                                       label: Text(
                                                         'Add to Cart',
                                                         style: TextStyle(
                                                           color: Colors.white,
-                                                          fontWeight: FontWeight.bold,
-                                                          fontSize: buttonFontSize,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize:
+                                                              buttonFontSize,
                                                         ),
                                                       ),
-                                                      style: ElevatedButton.styleFrom(
-                                                        backgroundColor: widget.theme.primaryColor,
-                                                        foregroundColor: Colors.white,
-                                                        padding: EdgeInsets.symmetric(
-                                                          horizontal: isSmallMobile ? 8 : isDesktop ? 16 : 12,
-                                                          vertical: isSmallMobile ? 0 : isDesktop ? 6 : 2,
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor: widget
+                                                            .theme.primaryColor,
+                                                        foregroundColor:
+                                                            Colors.white,
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal:
+                                                              isSmallMobile
+                                                                  ? 8
+                                                                  : isDesktop
+                                                                      ? 16
+                                                                      : 12,
+                                                          vertical:
+                                                              isSmallMobile
+                                                                  ? 0
+                                                                  : isDesktop
+                                                                      ? 6
+                                                                      : 2,
                                                         ),
-                                                        minimumSize: Size(0, isSmallMobile ? 24 : isDesktop ? 32 : 28),
-                                                        shape: RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(8),
+                                                        minimumSize: Size(
+                                                            0,
+                                                            isSmallMobile
+                                                                ? 24
+                                                                : isDesktop
+                                                                    ? 32
+                                                                    : 28),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8),
                                                         ),
                                                       ),
                                                     ),
@@ -450,35 +623,55 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                                             } else {
                                               // If we have enough width, keep them in a row
                                               return Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   // Price with enhanced typography
                                                   Container(
-                                                    padding: EdgeInsets.symmetric(
-                                                      horizontal: isSmallMobile ? 6 : 8,
-                                                      vertical: isSmallMobile ? 2 : 4,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          isSmallMobile ? 6 : 8,
+                                                      vertical:
+                                                          isSmallMobile ? 2 : 4,
                                                     ),
                                                     decoration: BoxDecoration(
-                                                      color: widget.theme.primaryColor.withValues(
-                                                        alpha: widget.theme.primaryColor.a * 0.1),
-                                                      borderRadius: BorderRadius.circular(8),
+                                                      color: widget
+                                                          .theme.primaryColor
+                                                          .withValues(
+                                                              alpha: widget
+                                                                      .theme
+                                                                      .primaryColor
+                                                                      .a *
+                                                                  0.1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
                                                     ),
                                                     child: Text(
                                                       '₹${item.price.toStringAsFixed(2)}',
                                                       style: TextStyle(
-                                                        color: widget.theme.primaryColor,
-                                                        fontWeight: FontWeight.bold,
+                                                        color: widget
+                                                            .theme.primaryColor,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                         fontSize: priceFontSize,
                                                       ),
                                                     ),
                                                   ),
-                                                  
+
                                                   // Add to cart button with enhanced design - MADE BIGGER
                                                   ElevatedButton.icon(
                                                     onPressed: () {
-                                                      final cartItem = cartProvider.cartItems.firstWhere(
-                                                        (cartItem) => cartItem.itemId == item.id,
+                                                      final cartItem =
+                                                          cartProvider.cartItems
+                                                              .firstWhere(
+                                                        (cartItem) =>
+                                                            cartItem.itemId ==
+                                                            item.id,
                                                         orElse: () => CartItem(
                                                           id: '',
                                                           userId: '',
@@ -487,17 +680,29 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                                                           item: item,
                                                         ),
                                                       );
-                                                      
-                                                      if (cartItem.quantity <= 0) {
+
+                                                      if (cartItem.quantity <=
+                                                          0) {
                                                         cartProvider.addToCart(
-                                                          Provider.of<AuthProvider>(context, listen: false).user!.id,
+                                                          Provider.of<AuthProvider>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .user!
+                                                              .id,
                                                           item,
                                                         );
-                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
                                                           SnackBar(
-                                                            content: Text('${item.name} added to cart'),
-                                                            duration: const Duration(seconds: 2),
-                                                            behavior: SnackBarBehavior.floating,
+                                                            content: Text(
+                                                                '${item.name} added to cart'),
+                                                            duration:
+                                                                const Duration(
+                                                                    seconds: 2),
+                                                            behavior:
+                                                                SnackBarBehavior
+                                                                    .floating,
                                                           ),
                                                         );
                                                       }
@@ -505,26 +710,54 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                                                     icon: Icon(
                                                       Icons.add_shopping_cart,
                                                       color: Colors.white,
-                                                      size: isSmallMobile ? 12 : isDesktop ? 16 : 14,
+                                                      size: isSmallMobile
+                                                          ? 12
+                                                          : isDesktop
+                                                              ? 16
+                                                              : 14,
                                                     ),
                                                     label: Text(
                                                       'Add to Cart',
                                                       style: TextStyle(
                                                         color: Colors.white,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: buttonFontSize,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize:
+                                                            buttonFontSize,
                                                       ),
                                                     ),
-                                                    style: ElevatedButton.styleFrom(
-                                                      backgroundColor: widget.theme.primaryColor,
-                                                      foregroundColor: Colors.white,
-                                                      padding: EdgeInsets.symmetric(
-                                                        horizontal: isSmallMobile ? 8 : isDesktop ? 16 : 12,
-                                                        vertical: isSmallMobile ? 0 : isDesktop ? 6 : 2,
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor: widget
+                                                          .theme.primaryColor,
+                                                      foregroundColor:
+                                                          Colors.white,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                        horizontal:
+                                                            isSmallMobile
+                                                                ? 8
+                                                                : isDesktop
+                                                                    ? 16
+                                                                    : 12,
+                                                        vertical: isSmallMobile
+                                                            ? 0
+                                                            : isDesktop
+                                                                ? 6
+                                                                : 2,
                                                       ),
-                                                      minimumSize: Size(0, isSmallMobile ? 24 : isDesktop ? 32 : 28),
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(8),
+                                                      minimumSize: Size(
+                                                          0,
+                                                          isSmallMobile
+                                                              ? 24
+                                                              : isDesktop
+                                                                  ? 32
+                                                                  : 28),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
                                                       ),
                                                     ),
                                                   ),
@@ -545,7 +778,7 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                     },
                   ),
           ),
-          
+
           // Enhanced page indicator dots with animation
           if (widget.recommendedItems.isNotEmpty)
             Padding(
@@ -563,15 +796,19 @@ class _RecommendationCarouselState extends State<RecommendationCarousel> {
                       final isActive = index == currentPage.round();
                       final distance = (index - currentPage).abs();
                       final opacity = 1.0 - (distance * 0.3).clamp(0.0, 0.7);
-                      
+
                       return Container(
-                        width: isActive ? (isSmallMobile ? 12 : 16) : (isSmallMobile ? 4 : 6),
+                        width: isActive
+                            ? (isSmallMobile ? 12 : 16)
+                            : (isSmallMobile ? 4 : 6),
                         height: isSmallMobile ? 4 : 6,
-                        margin: EdgeInsets.symmetric(horizontal: isSmallMobile ? 2 : 3),
+                        margin: EdgeInsets.symmetric(
+                            horizontal: isSmallMobile ? 2 : 3),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(isSmallMobile ? 2 : 3),
+                          borderRadius:
+                              BorderRadius.circular(isSmallMobile ? 2 : 3),
                           color: widget.theme.primaryColor.withValues(
-                            alpha: widget.theme.primaryColor.a * opacity),
+                              alpha: widget.theme.primaryColor.a * opacity),
                         ),
                       );
                     },

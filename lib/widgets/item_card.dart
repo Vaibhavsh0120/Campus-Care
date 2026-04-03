@@ -31,16 +31,44 @@ class ItemCard extends StatelessWidget {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
     final inCart = cartItem != null && cartItem!.quantity > 0;
-    
+
     // Adjust sizes based on screen dimensions
-    final double priceFontSize = isSmallMobile ? 12 : isTablet ? 16 : 14;
-    final double titleFontSize = isSmallMobile ? 12 : isTablet ? 16 : 14;
-    final double descriptionFontSize = isSmallMobile ? 10 : isTablet ? 14 : 12;
-    final double buttonFontSize = isSmallMobile ? 11 : isTablet ? 15 : 13;
-    final double buttonHeight = isSmallMobile ? 32 : isTablet ? 40 : 36;
-    final double iconSize = isSmallMobile ? 14 : isTablet ? 20 : 16;
-    final double borderRadius = isSmallMobile ? 12 : isTablet ? 20 : 16;
-    
+    final double priceFontSize = isSmallMobile
+        ? 12
+        : isTablet
+            ? 16
+            : 14;
+    final double titleFontSize = isSmallMobile
+        ? 12
+        : isTablet
+            ? 16
+            : 14;
+    final double descriptionFontSize = isSmallMobile
+        ? 10
+        : isTablet
+            ? 14
+            : 12;
+    final double buttonFontSize = isSmallMobile
+        ? 11
+        : isTablet
+            ? 15
+            : 13;
+    final double buttonHeight = isSmallMobile
+        ? 32
+        : isTablet
+            ? 40
+            : 36;
+    final double iconSize = isSmallMobile
+        ? 14
+        : isTablet
+            ? 20
+            : 16;
+    final double borderRadius = isSmallMobile
+        ? 12
+        : isTablet
+            ? 20
+            : 16;
+
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -71,11 +99,16 @@ class ItemCard extends StatelessWidget {
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
-                                color: theme.primaryColor.withValues(alpha: 0.1),
+                                color:
+                                    theme.primaryColor.withValues(alpha: 0.1),
                                 child: Center(
                                   child: Icon(
                                     Icons.fastfood,
-                                    size: isSmallMobile ? 30 : isTablet ? 50 : 40,
+                                    size: isSmallMobile
+                                        ? 30
+                                        : isTablet
+                                            ? 50
+                                            : 40,
                                     color: theme.primaryColor,
                                   ),
                                 ),
@@ -87,7 +120,11 @@ class ItemCard extends StatelessWidget {
                             child: Center(
                               child: Icon(
                                 Icons.fastfood,
-                                size: isSmallMobile ? 30 : isTablet ? 50 : 40,
+                                size: isSmallMobile
+                                    ? 30
+                                    : isTablet
+                                        ? 50
+                                        : 40,
                                 color: theme.primaryColor,
                               ),
                             ),
@@ -103,7 +140,8 @@ class ItemCard extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: theme.primaryColor,
-                          borderRadius: BorderRadius.circular(isSmallMobile ? 16 : 20),
+                          borderRadius:
+                              BorderRadius.circular(isSmallMobile ? 16 : 20),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(alpha: 0.2),
@@ -133,7 +171,11 @@ class ItemCard extends StatelessWidget {
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontSize: isSmallMobile ? 12 : isTablet ? 18 : 16,
+                                fontSize: isSmallMobile
+                                    ? 12
+                                    : isTablet
+                                        ? 18
+                                        : 16,
                               ),
                             ),
                           ),
@@ -142,7 +184,7 @@ class ItemCard extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Item details - fixed height content
               Container(
                 padding: EdgeInsets.only(
@@ -166,33 +208,39 @@ class ItemCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    
+
                     // Small space
                     SizedBox(height: isSmallMobile ? 2 : 4),
-                    
+
                     // Item description
-                    if (item.description != null && item.description!.isNotEmpty)
+                    if (item.description != null &&
+                        item.description!.isNotEmpty)
                       Text(
                         item.description!,
                         style: TextStyle(
-                          color: isDarkMode ? theme.colorScheme.onSurface.withValues(alpha: 0.7) : Colors.grey[600],
+                          color: isDarkMode
+                              ? theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.7)
+                              : Colors.grey[600],
                           fontSize: descriptionFontSize,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                    
+
                     // Space before button
                     SizedBox(height: isSmallMobile ? 6 : 8),
                   ],
                 ),
               ),
-              
+
               // Button - attached directly to the bottom with NO margins or padding
               if (item.availableToday)
                 inCart
-                    ? _buildQuantityControls(theme, buttonHeight, iconSize, buttonFontSize)
-                    : _buildAddToCartButton(theme, buttonHeight, buttonFontSize),
+                    ? _buildQuantityControls(
+                        theme, buttonHeight, iconSize, buttonFontSize)
+                    : _buildAddToCartButton(
+                        theme, buttonHeight, buttonFontSize),
             ],
           ),
         ),
@@ -200,7 +248,8 @@ class ItemCard extends StatelessWidget {
     );
   }
 
-  Widget _buildAddToCartButton(ThemeData theme, double height, double fontSize) {
+  Widget _buildAddToCartButton(
+      ThemeData theme, double height, double fontSize) {
     return SizedBox(
       width: double.infinity,
       height: height,
@@ -228,7 +277,8 @@ class ItemCard extends StatelessWidget {
     );
   }
 
-  Widget _buildQuantityControls(ThemeData theme, double height, double iconSize, double fontSize) {
+  Widget _buildQuantityControls(
+      ThemeData theme, double height, double iconSize, double fontSize) {
     return Container(
       width: double.infinity,
       height: height,
@@ -255,7 +305,7 @@ class ItemCard extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Quantity
           Text(
             '${cartItem?.quantity ?? 0}',
@@ -265,7 +315,7 @@ class ItemCard extends StatelessWidget {
               fontSize: fontSize,
             ),
           ),
-          
+
           // Increase button
           InkWell(
             onTap: onIncreaseQuantity,

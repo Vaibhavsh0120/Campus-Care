@@ -6,7 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class CartTile extends StatelessWidget {
   final CartItem cartItem;
-  
+
   const CartTile({
     Key? key,
     required this.cartItem,
@@ -17,7 +17,7 @@ class CartTile extends StatelessWidget {
     final cartProvider = Provider.of<CartProvider>(context);
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
@@ -43,7 +43,9 @@ class CartTile extends StatelessWidget {
                         errorWidget: (context, url, error) => Center(
                           child: Icon(
                             Icons.image_not_supported,
-                            color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[600],
                           ),
                         ),
                       )
@@ -58,7 +60,7 @@ class CartTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            
+
             // Content
             Expanded(
               child: Column(
@@ -105,7 +107,9 @@ class CartTile extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: isDarkMode ? Colors.grey[700]! : Colors.grey[400]!,
+                            color: isDarkMode
+                                ? Colors.grey[700]!
+                                : Colors.grey[400]!,
                           ),
                           borderRadius: BorderRadius.circular(4),
                         ),
@@ -145,7 +149,7 @@ class CartTile extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             // Delete button
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),

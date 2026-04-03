@@ -17,38 +17,38 @@ class AnalyticsScreen extends StatefulWidget {
 
 class _AnalyticsScreenState extends State<AnalyticsScreen> {
   final OrderService _orderService = OrderService();
-  
+
   bool _isLoading = false;
   String? _error;
-  
+
   List<OrderModel> _orders = [];
   List<ItemModel> _items = [];
-  
+
   // Analytics data
   double _totalRevenue = 0;
   int _totalOrders = 0;
   double _averageOrderValue = 0;
   List<MapEntry<String, int>> _topSellingItems = [];
-  
+
   // Revenue data for chart
   List<FlSpot> _revenueData = [];
   double _maxRevenue = 0;
-  
+
   // Date range
   String _dateRange = 'week'; // 'week', 'month', 'year'
-  
+
   @override
   void initState() {
     super.initState();
     _loadData();
   }
-  
+
   Future<void> _loadData() async {
     setState(() {
       _isLoading = true;
       _error = null;
     });
-    
+
     try {
       // Load orders using the existing OrderService
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -57,17 +57,17 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         isStaff: true,
       );
       if (!mounted) return;
-      
+
       // Load items using the ItemProvider
       final itemProvider = Provider.of<ItemProvider>(context, listen: false);
       await itemProvider.loadItems(onlyAvailable: false);
       final items = itemProvider.items;
       if (!mounted) return;
-      
+
       setState(() {
         _orders = orders;
         _items = items;
-        
+
         // Calculate analytics
         _calculateAnalytics();
       });
@@ -85,11 +85,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       }
     }
   }
-  
+
   void _calculateAnalytics() {
     // Filter orders based on date range
     final filteredOrders = _filterOrdersByDateRange(_orders);
-    
+
     // Calculate total revenue
     _totalRevenue = filteredOrders.fold(0, (sum, order) {
       // Calculate total from order items
@@ -98,27 +98,28 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       });
       return sum + orderTotal;
     });
-    
+
     // Calculate total orders
     _totalOrders = filteredOrders.length;
-    
+
     // Calculate average order value
     _averageOrderValue = _totalOrders > 0 ? _totalRevenue / _totalOrders : 0;
-    
+
     // Calculate top selling items
     final itemQuantityMap = <String, int>{};
-    
+
     for (final order in filteredOrders) {
       for (final item in order.items) {
         final itemId = item.itemId;
-        itemQuantityMap[itemId] = (itemQuantityMap[itemId] ?? 0) + item.quantity;
+        itemQuantityMap[itemId] =
+            (itemQuantityMap[itemId] ?? 0) + item.quantity;
       }
     }
-    
+
     // Convert to list and sort
     final sortedItems = itemQuantityMap.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    
+
     // Get top 5 items with names
     _topSellingItems = sortedItems.take(5).map((entry) {
       final item = _items.firstWhere(
@@ -131,18 +132,18 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           createdAt: DateTime.now(),
         ),
       );
-      
+
       return MapEntry(item.name, entry.value);
     }).toList();
-    
+
     // Calculate revenue data for chart
     _calculateRevenueData(filteredOrders);
   }
-  
+
   List<OrderModel> _filterOrdersByDateRange(List<OrderModel> orders) {
     final now = DateTime.now();
     DateTime startDate;
-    
+
     switch (_dateRange) {
       case 'week':
         // Start from 7 days ago
@@ -159,14 +160,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       default:
         startDate = now.subtract(const Duration(days: 7));
     }
-    
+
     return orders.where((order) => order.createdAt.isAfter(startDate)).toList();
   }
-  
+
   void _calculateRevenueData(List<OrderModel> orders) {
     final now = DateTime.now();
     final Map<String, double> revenueByDate = {};
-    
+
     // Initialize with zero values
     if (_dateRange == 'week') {
       // For week, show last 7 days
@@ -180,7 +181,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       for (int i = 3; i >= 0; i--) {
         final weekStart = now.subtract(Duration(days: i * 7 + 6));
         final weekEnd = now.subtract(Duration(days: i * 7));
-        final dateStr = '${DateFormat('MM/dd').format(weekStart)}-${DateFormat('MM/dd').format(weekEnd)}';
+        final dateStr =
+            '${DateFormat('MM/dd').format(weekStart)}-${DateFormat('MM/dd').format(weekEnd)}';
         revenueByDate[dateStr] = 0;
       }
     } else if (_dateRange == 'year') {
@@ -191,12 +193,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         revenueByDate[dateStr] = 0;
       }
     }
-    
+
     // Calculate revenue for each date
     for (final order in orders) {
       final orderDate = order.createdAt;
       String? dateKey;
-      
+
       if (_dateRange == 'week') {
         dateKey = DateFormat('MM/dd').format(orderDate);
       } else if (_dateRange == 'month') {
@@ -204,9 +206,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         for (int i = 3; i >= 0; i--) {
           final weekStart = now.subtract(Duration(days: i * 7 + 6));
           final weekEnd = now.subtract(Duration(days: i * 7));
-          if (orderDate.isAfter(weekStart.subtract(const Duration(days: 1))) && 
+          if (orderDate.isAfter(weekStart.subtract(const Duration(days: 1))) &&
               orderDate.isBefore(weekEnd.add(const Duration(days: 1)))) {
-            dateKey = '${DateFormat('MM/dd').format(weekStart)}-${DateFormat('MM/dd').format(weekEnd)}';
+            dateKey =
+                '${DateFormat('MM/dd').format(weekStart)}-${DateFormat('MM/dd').format(weekEnd)}';
             break;
           }
         }
@@ -214,7 +217,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       } else {
         dateKey = DateFormat('MMM').format(orderDate);
       }
-      
+
       if (revenueByDate.containsKey(dateKey)) {
         // Calculate order total
         final orderTotal = order.items.fold(0.0, (sum, item) {
@@ -223,12 +226,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         revenueByDate[dateKey] = (revenueByDate[dateKey] ?? 0) + orderTotal;
       }
     }
-    
+
     // Convert to FlSpot list
     _revenueData = [];
     int index = 0;
     _maxRevenue = 0;
-    
+
     for (final entry in revenueByDate.entries) {
       _revenueData.add(FlSpot(index.toDouble(), entry.value));
       if (entry.value > _maxRevenue) {
@@ -236,13 +239,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       }
       index++;
     }
-    
+
     // Ensure we have a non-zero max for the chart
     if (_maxRevenue == 0) {
       _maxRevenue = 100;
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFFFEC62B); // Match user home screen color
@@ -250,7 +253,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     final isLargeScreen = size.width > 900;
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    
+
     if (_isLoading) {
       return const Center(
         child: CircularProgressIndicator(
@@ -258,7 +261,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         ),
       );
     }
-    
+
     if (_error != null) {
       return Center(
         child: Column(
@@ -289,7 +292,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         ),
       );
     }
-    
+
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: _loadData,
@@ -300,8 +303,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       ),
     );
   }
-  
-  Widget _buildLargeScreenLayout(Color primaryColor, bool isDarkMode, ThemeData theme) {
+
+  Widget _buildLargeScreenLayout(
+      Color primaryColor, bool isDarkMode, ThemeData theme) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -323,19 +327,40 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ],
           ),
           const SizedBox(height: 24),
-          
+
           // Summary cards
           Row(
             children: [
-              Expanded(child: _buildSummaryCard('Total Revenue', '₹${_totalRevenue.toStringAsFixed(2)}', Icons.attach_money, primaryColor, isDarkMode, theme)),
+              Expanded(
+                  child: _buildSummaryCard(
+                      'Total Revenue',
+                      '₹${_totalRevenue.toStringAsFixed(2)}',
+                      Icons.attach_money,
+                      primaryColor,
+                      isDarkMode,
+                      theme)),
               const SizedBox(width: 16),
-              Expanded(child: _buildSummaryCard('Total Orders', _totalOrders.toString(), Icons.shopping_bag, primaryColor, isDarkMode, theme)),
+              Expanded(
+                  child: _buildSummaryCard(
+                      'Total Orders',
+                      _totalOrders.toString(),
+                      Icons.shopping_bag,
+                      primaryColor,
+                      isDarkMode,
+                      theme)),
               const SizedBox(width: 16),
-              Expanded(child: _buildSummaryCard('Average Order', '₹${_averageOrderValue.toStringAsFixed(2)}', Icons.trending_up, primaryColor, isDarkMode, theme)),
+              Expanded(
+                  child: _buildSummaryCard(
+                      'Average Order',
+                      '₹${_averageOrderValue.toStringAsFixed(2)}',
+                      Icons.trending_up,
+                      primaryColor,
+                      isDarkMode,
+                      theme)),
             ],
           ),
           const SizedBox(height: 24),
-          
+
           // Charts section
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -366,23 +391,26 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         Text(
                           _dateRangeText(),
                           style: TextStyle(
-                            color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[600],
                             fontSize: 14,
                           ),
                         ),
                         const SizedBox(height: 24),
                         SizedBox(
                           height: 300,
-                          child: _buildRevenueChart(primaryColor, isDarkMode, theme),
+                          child: _buildRevenueChart(
+                              primaryColor, isDarkMode, theme),
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
-              
+
               const SizedBox(width: 24),
-              
+
               // Top selling items
               Expanded(
                 flex: 2,
@@ -409,7 +437,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         ..._topSellingItems.asMap().entries.map((entry) {
                           final index = entry.key;
                           final item = entry.value;
-                          return _buildTopSellingItem(index, item.key, item.value, primaryColor, isDarkMode, theme);
+                          return _buildTopSellingItem(index, item.key,
+                              item.value, primaryColor, isDarkMode, theme);
                         }),
                         if (_topSellingItems.isEmpty)
                           Center(
@@ -420,13 +449,17 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                   Icon(
                                     Icons.bar_chart,
                                     size: 64,
-                                    color: isDarkMode ? Colors.grey[700] : Colors.grey[400],
+                                    color: isDarkMode
+                                        ? Colors.grey[700]
+                                        : Colors.grey[400],
                                   ),
                                   const SizedBox(height: 16),
                                   Text(
                                     'No sales data available',
                                     style: TextStyle(
-                                      color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                      color: isDarkMode
+                                          ? Colors.grey[400]
+                                          : Colors.grey[600],
                                       fontSize: 16,
                                     ),
                                   ),
@@ -442,7 +475,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ],
           ),
           const SizedBox(height: 24),
-          
+
           // Additional analytics section
           Card(
             elevation: 4,
@@ -476,8 +509,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       ),
     );
   }
-  
-  Widget _buildSmallScreenLayout(Color primaryColor, bool isDarkMode, ThemeData theme) {
+
+  Widget _buildSmallScreenLayout(
+      Color primaryColor, bool isDarkMode, ThemeData theme) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -493,19 +527,32 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Date range selector
           _buildDateRangeSelector(primaryColor, isDarkMode, theme),
           const SizedBox(height: 16),
-          
+
           // Summary cards - stacked for mobile
-          _buildSummaryCard('Total Revenue', '₹${_totalRevenue.toStringAsFixed(2)}', Icons.attach_money, primaryColor, isDarkMode, theme),
+          _buildSummaryCard(
+              'Total Revenue',
+              '₹${_totalRevenue.toStringAsFixed(2)}',
+              Icons.attach_money,
+              primaryColor,
+              isDarkMode,
+              theme),
           const SizedBox(height: 12),
-          _buildSummaryCard('Total Orders', _totalOrders.toString(), Icons.shopping_bag, primaryColor, isDarkMode, theme),
+          _buildSummaryCard('Total Orders', _totalOrders.toString(),
+              Icons.shopping_bag, primaryColor, isDarkMode, theme),
           const SizedBox(height: 12),
-          _buildSummaryCard('Average Order', '₹${_averageOrderValue.toStringAsFixed(2)}', Icons.trending_up, primaryColor, isDarkMode, theme),
+          _buildSummaryCard(
+              'Average Order',
+              '₹${_averageOrderValue.toStringAsFixed(2)}',
+              Icons.trending_up,
+              primaryColor,
+              isDarkMode,
+              theme),
           const SizedBox(height: 24),
-          
+
           // Revenue chart
           Card(
             elevation: 4,
@@ -544,7 +591,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Top selling items
           Card(
             elevation: 4,
@@ -569,7 +616,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   ..._topSellingItems.asMap().entries.map((entry) {
                     final index = entry.key;
                     final item = entry.value;
-                    return _buildTopSellingItem(index, item.key, item.value, primaryColor, isDarkMode, theme);
+                    return _buildTopSellingItem(index, item.key, item.value,
+                        primaryColor, isDarkMode, theme);
                   }),
                   if (_topSellingItems.isEmpty)
                     Center(
@@ -580,13 +628,17 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                             Icon(
                               Icons.bar_chart,
                               size: 48,
-                              color: isDarkMode ? Colors.grey[700] : Colors.grey[400],
+                              color: isDarkMode
+                                  ? Colors.grey[700]
+                                  : Colors.grey[400],
                             ),
                             const SizedBox(height: 12),
                             Text(
                               'No sales data available',
                               style: TextStyle(
-                                color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                color: isDarkMode
+                                    ? Colors.grey[400]
+                                    : Colors.grey[600],
                                 fontSize: 14,
                               ),
                             ),
@@ -599,7 +651,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Category chart
           Card(
             elevation: 4,
@@ -633,8 +685,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       ),
     );
   }
-  
-  Widget _buildSummaryCard(String title, String value, IconData icon, Color primaryColor, bool isDarkMode, ThemeData theme) {
+
+  Widget _buildSummaryCard(String title, String value, IconData icon,
+      Color primaryColor, bool isDarkMode, ThemeData theme) {
     return Card(
       elevation: 4,
       color: theme.cardTheme.color,
@@ -686,11 +739,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       ),
     );
   }
-  
-  Widget _buildDateRangeSelector(Color primaryColor, bool isDarkMode, ThemeData theme) {
+
+  Widget _buildDateRangeSelector(
+      Color primaryColor, bool isDarkMode, ThemeData theme) {
     return Card(
       elevation: 0,
-      color: isDarkMode ? theme.cardTheme.color?.withValues(alpha: 0.3) : Colors.grey[100],
+      color: isDarkMode
+          ? theme.cardTheme.color?.withValues(alpha: 0.3)
+          : Colors.grey[100],
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -699,18 +755,22 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildDateRangeButton('Week', 'week', primaryColor, isDarkMode, theme),
-            _buildDateRangeButton('Month', 'month', primaryColor, isDarkMode, theme),
-            _buildDateRangeButton('Year', 'year', primaryColor, isDarkMode, theme),
+            _buildDateRangeButton(
+                'Week', 'week', primaryColor, isDarkMode, theme),
+            _buildDateRangeButton(
+                'Month', 'month', primaryColor, isDarkMode, theme),
+            _buildDateRangeButton(
+                'Year', 'year', primaryColor, isDarkMode, theme),
           ],
         ),
       ),
     );
   }
-  
-  Widget _buildDateRangeButton(String label, String value, Color primaryColor, bool isDarkMode, ThemeData theme) {
+
+  Widget _buildDateRangeButton(String label, String value, Color primaryColor,
+      bool isDarkMode, ThemeData theme) {
     final isSelected = _dateRange == value;
-    
+
     return InkWell(
       onTap: () {
         setState(() {
@@ -728,19 +788,21 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected 
-                ? Colors.black87 
-                : isDarkMode ? theme.colorScheme.onSurface : Colors.grey[700],
+            color: isSelected
+                ? Colors.black87
+                : isDarkMode
+                    ? theme.colorScheme.onSurface
+                    : Colors.grey[700],
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),
       ),
     );
   }
-  
+
   String _dateRangeText() {
     final now = DateTime.now();
-    
+
     switch (_dateRange) {
       case 'week':
         final startDate = now.subtract(const Duration(days: 6));
@@ -755,8 +817,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         return '';
     }
   }
-  
-  Widget _buildRevenueChart(Color primaryColor, bool isDarkMode, ThemeData theme) {
+
+  Widget _buildRevenueChart(
+      Color primaryColor, bool isDarkMode, ThemeData theme) {
     if (_revenueData.isEmpty) {
       return Center(
         child: Text(
@@ -768,7 +831,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         ),
       );
     }
-    
+
     return LineChart(
       LineChartData(
         gridData: FlGridData(
@@ -806,7 +869,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   String label = '';
                   if (_dateRange == 'week') {
                     final now = DateTime.now();
-                    final date = now.subtract(Duration(days: 6 - value.toInt()));
+                    final date =
+                        now.subtract(Duration(days: 6 - value.toInt()));
                     label = DateFormat('E').format(date);
                   } else if (_dateRange == 'month') {
                     final weekIndex = value.toInt();
@@ -817,7 +881,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     final date = DateTime(now.year, month, 1);
                     label = DateFormat('MMM').format(date);
                   }
-                  
+
                   return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
@@ -825,7 +889,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: isDarkMode ? theme.colorScheme.onSurface : Colors.black87,
+                        color: isDarkMode
+                            ? theme.colorScheme.onSurface
+                            : Colors.black87,
                       ),
                     ),
                   );
@@ -845,7 +911,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: isDarkMode ? theme.colorScheme.onSurface : Colors.black87,
+                    color: isDarkMode
+                        ? theme.colorScheme.onSurface
+                        : Colors.black87,
                   ),
                 );
               },
@@ -879,14 +947,15 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       ),
     );
   }
-  
-  Widget _buildTopSellingItem(int index, String name, int quantity, Color primaryColor, bool isDarkMode, ThemeData theme) {
-    final maxQuantity = _topSellingItems.isNotEmpty 
-        ? _topSellingItems.map((e) => e.value).reduce((a, b) => a > b ? a : b) 
+
+  Widget _buildTopSellingItem(int index, String name, int quantity,
+      Color primaryColor, bool isDarkMode, ThemeData theme) {
+    final maxQuantity = _topSellingItems.isNotEmpty
+        ? _topSellingItems.map((e) => e.value).reduce((a, b) => a > b ? a : b)
         : 0;
-    
+
     final progress = maxQuantity > 0 ? quantity / maxQuantity : 0;
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -923,8 +992,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       ),
     );
   }
-  
-  Widget _buildCategoryChart(Color primaryColor, bool isDarkMode, ThemeData theme) {
+
+  Widget _buildCategoryChart(
+      Color primaryColor, bool isDarkMode, ThemeData theme) {
     if (_orders.isEmpty || _items.isEmpty) {
       return Center(
         child: Text(
@@ -936,39 +1006,52 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         ),
       );
     }
-    
+
     // Infer categories from item names
     final Map<String, double> categoryRevenue = {};
-    
+
     // Helper function to infer category from item name
     String inferCategory(String itemName) {
       itemName = itemName.toLowerCase();
-      
-      if (itemName.contains('coffee') || itemName.contains('tea') || 
-          itemName.contains('juice') || itemName.contains('water') || 
-          itemName.contains('soda') || itemName.contains('drink')) {
+
+      if (itemName.contains('coffee') ||
+          itemName.contains('tea') ||
+          itemName.contains('juice') ||
+          itemName.contains('water') ||
+          itemName.contains('soda') ||
+          itemName.contains('drink')) {
         return 'Beverages';
-      } else if (itemName.contains('sandwich') || itemName.contains('burger') || 
-                 itemName.contains('wrap') || itemName.contains('roll')) {
+      } else if (itemName.contains('sandwich') ||
+          itemName.contains('burger') ||
+          itemName.contains('wrap') ||
+          itemName.contains('roll')) {
         return 'Sandwiches & Wraps';
-      } else if (itemName.contains('pizza') || itemName.contains('pasta') || 
-                 itemName.contains('noodle')) {
+      } else if (itemName.contains('pizza') ||
+          itemName.contains('pasta') ||
+          itemName.contains('noodle')) {
         return 'Italian & Noodles';
-      } else if (itemName.contains('rice') || itemName.contains('biryani') || 
-                 itemName.contains('curry') || itemName.contains('thali')) {
+      } else if (itemName.contains('rice') ||
+          itemName.contains('biryani') ||
+          itemName.contains('curry') ||
+          itemName.contains('thali')) {
         return 'Indian Meals';
-      } else if (itemName.contains('cake') || itemName.contains('pastry') || 
-                 itemName.contains('cookie') || itemName.contains('sweet') || 
-                 itemName.contains('ice cream') || itemName.contains('dessert')) {
+      } else if (itemName.contains('cake') ||
+          itemName.contains('pastry') ||
+          itemName.contains('cookie') ||
+          itemName.contains('sweet') ||
+          itemName.contains('ice cream') ||
+          itemName.contains('dessert')) {
         return 'Desserts';
-      } else if (itemName.contains('chips') || itemName.contains('fries') || 
-                 itemName.contains('snack') || itemName.contains('popcorn')) {
+      } else if (itemName.contains('chips') ||
+          itemName.contains('fries') ||
+          itemName.contains('snack') ||
+          itemName.contains('popcorn')) {
         return 'Snacks';
       } else {
         return 'Others';
       }
     }
-    
+
     // Calculate revenue by inferred category
     for (final order in _orders) {
       for (final orderItem in order.items) {
@@ -983,18 +1066,18 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             createdAt: DateTime.now(),
           ),
         );
-        
+
         final category = inferCategory(item.name);
         final revenue = orderItem.quantity * orderItem.price;
-        
+
         categoryRevenue[category] = (categoryRevenue[category] ?? 0) + revenue;
       }
     }
-    
+
     // Sort categories by revenue
     final sortedCategories = categoryRevenue.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    
+
     // Prepare data for the chart
     final List<PieChartSectionData> sections = [];
     final List<Color> colors = [
@@ -1006,13 +1089,15 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       Colors.orange,
       Colors.teal,
     ];
-    
-    double totalRevenue = categoryRevenue.values.fold(0, (sum, value) => sum + value);
-    
+
+    double totalRevenue =
+        categoryRevenue.values.fold(0, (sum, value) => sum + value);
+
     for (int i = 0; i < sortedCategories.length; i++) {
       final entry = sortedCategories[i];
-      final percentage = totalRevenue > 0 ? (entry.value / totalRevenue) * 100 : 0;
-      
+      final percentage =
+          totalRevenue > 0 ? (entry.value / totalRevenue) * 100 : 0;
+
       sections.add(
         PieChartSectionData(
           color: colors[i % colors.length],
@@ -1027,7 +1112,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         ),
       );
     }
-    
+
     return Column(
       children: [
         SizedBox(
@@ -1049,7 +1134,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             final category = entry.value.key;
             final revenue = entry.value.value;
             final color = colors[index % colors.length];
-            
+
             return Row(
               mainAxisSize: MainAxisSize.min,
               children: [

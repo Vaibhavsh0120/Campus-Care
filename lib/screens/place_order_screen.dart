@@ -16,7 +16,8 @@ class PlaceOrderScreen extends StatefulWidget {
   State<PlaceOrderScreen> createState() => _PlaceOrderScreenState();
 }
 
-class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerProviderStateMixin {
+class _PlaceOrderScreenState extends State<PlaceOrderScreen>
+    with SingleTickerProviderStateMixin {
   final OrderService _orderService = OrderService();
   late Razorpay _razorpay;
   bool _isProcessing = false;
@@ -28,20 +29,20 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
   @override
   void initState() {
     super.initState();
-    
+
     // Setup animations
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Curves.easeIn,
       ),
     );
-    
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
@@ -51,9 +52,9 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
         curve: Curves.easeOut,
       ),
     );
-    
+
     _animationController.forward();
-    
+
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
@@ -76,7 +77,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
     setState(() {
       _isProcessing = false;
     });
-    
+
     Fluttertoast.showToast(
       msg: "Payment failed: ${response.message}",
       toastLength: Toast.LENGTH_LONG,
@@ -94,28 +95,28 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
     setState(() {
       _isProcessing = true;
     });
-    
+
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final cartProvider = Provider.of<CartProvider>(context, listen: false);
-      
+
       final order = await _orderService.createOrder(
         authProvider.user!.id,
         cartProvider.cartItems,
         cartProvider.totalPrice,
         paymentMethod,
       );
-      
+
       if (order != null) {
         // Clear the cart after successful order
         await cartProvider.clearCart(authProvider.user!.id);
         if (!mounted) return;
-        
+
         Fluttertoast.showToast(
           msg: "Order placed successfully!",
           toastLength: Toast.LENGTH_LONG,
         );
-        
+
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const HomeScreen()),
           (route) => false,
@@ -143,7 +144,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
   void _startRazorpayPayment() {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    
+
     var options = {
       'key': dotenv.env['RAZORPAY_KEY_ID'],
       'amount': (cartProvider.totalPrice * 100).toInt(), // Amount in paise
@@ -154,7 +155,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
         'email': authProvider.user?.email ?? '',
       }
     };
-    
+
     try {
       _razorpay.open(options);
     } catch (e) {
@@ -172,7 +173,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width > 900;
     final isDarkMode = theme.brightness == Brightness.dark;
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -230,7 +231,8 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
     );
   }
 
-  Widget _buildDesktopLayout(CartProvider cartProvider, ThemeData theme, bool isDarkMode) {
+  Widget _buildDesktopLayout(
+      CartProvider cartProvider, ThemeData theme, bool isDarkMode) {
     return Row(
       children: [
         // Order summary (left side)
@@ -260,7 +262,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                   ],
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Items list with enhanced design
                 Card(
                   shape: RoundedRectangleBorder(
@@ -272,110 +274,129 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
-                        ...cartProvider.cartItems.map((item) => Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: Row(
-                            children: [
-                              // Item image with enhanced design
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Container(
-                                  width: 70,
-                                  height: 70,
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(alpha: 0.1),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 5),
+                        ...cartProvider.cartItems
+                            .map((item) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: Row(
+                                    children: [
+                                      // Item image with enhanced design
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Container(
+                                          width: 70,
+                                          height: 70,
+                                          decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withValues(alpha: 0.1),
+                                                blurRadius: 10,
+                                                offset: const Offset(0, 5),
+                                              ),
+                                            ],
+                                          ),
+                                          child: item.item.imageUrl != null &&
+                                                  item.item.imageUrl!.isNotEmpty
+                                              ? Image.network(
+                                                  item.item.imageUrl!,
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return Container(
+                                                      color: theme.primaryColor
+                                                          .withValues(
+                                                              alpha: 0.1),
+                                                      child: Icon(
+                                                        Icons.fastfood,
+                                                        color:
+                                                            theme.primaryColor,
+                                                        size: 30,
+                                                      ),
+                                                    );
+                                                  },
+                                                )
+                                              : Container(
+                                                  color: theme.primaryColor
+                                                      .withValues(alpha: 0.1),
+                                                  child: Icon(
+                                                    Icons.fastfood,
+                                                    color: theme.primaryColor,
+                                                    size: 30,
+                                                  ),
+                                                ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 20),
+
+                                      // Item details with enhanced design
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              item.item.name,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 4),
+                                              decoration: BoxDecoration(
+                                                color: theme.primaryColor
+                                                    .withValues(alpha: 0.1),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: Text(
+                                                '₹${item.item.price.toStringAsFixed(2)} x ${item.quantity}',
+                                                style: TextStyle(
+                                                  color: Colors.grey[800],
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      // Item total with enhanced design
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 12, vertical: 8),
+                                        decoration: BoxDecoration(
+                                          color: theme.primaryColor
+                                              .withValues(alpha: 0.1),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          border: Border.all(
+                                            color: theme.primaryColor
+                                                .withValues(alpha: 0.3),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          '₹${item.totalPrice.toStringAsFixed(2)}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: theme.primaryColor,
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
-                                  child: item.item.imageUrl != null && item.item.imageUrl!.isNotEmpty
-                                      ? Image.network(
-                                          item.item.imageUrl!,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return Container(
-                                              color: theme.primaryColor.withValues(alpha: 0.1),
-                                              child: Icon(
-                                                Icons.fastfood,
-                                                color: theme.primaryColor,
-                                                size: 30,
-                                              ),
-                                            );
-                                          },
-                                        )
-                                      : Container(
-                                          color: theme.primaryColor.withValues(alpha: 0.1),
-                                          child: Icon(
-                                            Icons.fastfood,
-                                            color: theme.primaryColor,
-                                            size: 30,
-                                          ),
-                                        ),
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              
-                              // Item details with enhanced design
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      item.item.name,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: theme.primaryColor.withValues(alpha: 0.1),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Text(
-                                        '₹${item.item.price.toStringAsFixed(2)} x ${item.quantity}',
-                                        style: TextStyle(
-                                          color: Colors.grey[800],
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              
-                              // Item total with enhanced design
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: theme.primaryColor.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: theme.primaryColor.withValues(alpha: 0.3),
-                                  ),
-                                ),
-                                child: Text(
-                                  '₹${item.totalPrice.toStringAsFixed(2)}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: theme.primaryColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )).toList(),
-                        
+                                ))
+                            .toList(),
+
                         Divider(
                           color: Colors.grey[300],
                           thickness: 1,
                         ),
-                        
+
                         // Total with enhanced design
                         Padding(
                           padding: const EdgeInsets.only(top: 8),
@@ -390,13 +411,15 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                                 ),
                               ),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 10),
                                 decoration: BoxDecoration(
                                   color: theme.primaryColor,
                                   borderRadius: BorderRadius.circular(12),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: theme.primaryColor.withValues(alpha: 0.3),
+                                      color: theme.primaryColor
+                                          .withValues(alpha: 0.3),
                                       blurRadius: 8,
                                       offset: const Offset(0, 3),
                                     ),
@@ -422,7 +445,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
             ),
           ),
         ),
-        
+
         // Payment options (right side) with enhanced design
         Expanded(
           flex: 2,
@@ -463,12 +486,12 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                   ],
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Payment options with enhanced design
                 _buildPaymentOptions(theme, isDarkMode),
-                
+
                 const Spacer(),
-                
+
                 // Place order button with enhanced design
                 SizedBox(
                   width: double.infinity,
@@ -521,7 +544,8 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
     );
   }
 
-  Widget _buildMobileLayout(CartProvider cartProvider, ThemeData theme, bool isDarkMode) {
+  Widget _buildMobileLayout(
+      CartProvider cartProvider, ThemeData theme, bool isDarkMode) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -558,7 +582,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Items list with enhanced design
           Card(
             shape: RoundedRectangleBorder(
@@ -586,13 +610,15 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                         child: SizedBox(
                           width: 60,
                           height: 60,
-                          child: item.item.imageUrl != null && item.item.imageUrl!.isNotEmpty
+                          child: item.item.imageUrl != null &&
+                                  item.item.imageUrl!.isNotEmpty
                               ? Image.network(
                                   item.item.imageUrl!,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
                                     return Container(
-                                      color: theme.primaryColor.withValues(alpha: 0.1),
+                                      color: theme.primaryColor
+                                          .withValues(alpha: 0.1),
                                       child: Icon(
                                         Icons.fastfood,
                                         color: theme.primaryColor,
@@ -601,7 +627,8 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                                   },
                                 )
                               : Container(
-                                  color: theme.primaryColor.withValues(alpha: 0.1),
+                                  color:
+                                      theme.primaryColor.withValues(alpha: 0.1),
                                   child: Icon(
                                     Icons.fastfood,
                                     color: theme.primaryColor,
@@ -610,7 +637,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                         ),
                       ),
                       const SizedBox(width: 12),
-                      
+
                       // Item details with enhanced design
                       Expanded(
                         child: Column(
@@ -625,9 +652,11 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                             ),
                             const SizedBox(height: 4),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 2),
                               decoration: BoxDecoration(
-                                color: theme.primaryColor.withValues(alpha: 0.1),
+                                color:
+                                    theme.primaryColor.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
@@ -641,10 +670,11 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                           ],
                         ),
                       ),
-                      
+
                       // Item total with enhanced design
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
                           color: theme.primaryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
@@ -666,7 +696,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
               },
             ),
           ),
-          
+
           // Total with enhanced design
           Container(
             margin: const EdgeInsets.symmetric(vertical: 20),
@@ -696,7 +726,8 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     color: theme.primaryColor,
                     borderRadius: BorderRadius.circular(12),
@@ -720,9 +751,9 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
               ],
             ),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Payment method with enhanced design
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8),
@@ -754,12 +785,12 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Payment options with enhanced design
           _buildPaymentOptions(theme, isDarkMode),
-          
+
           const SizedBox(height: 32),
-          
+
           // Place order button with enhanced design
           SizedBox(
             width: double.infinity,
@@ -809,203 +840,217 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> with SingleTickerPr
     );
   }
 
-Widget _buildPaymentOptions(ThemeData theme, bool isDarkMode) {
-  return Column(
-    children: [
-      // Cash option with enhanced design
-      InkWell(
-        onTap: () {
-          setState(() {
-            _selectedPaymentMethod = 'cash';
-          });
-        },
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: _selectedPaymentMethod == 'cash'
-                ? theme.primaryColor.withValues(alpha: 0.1)
-                : isDarkMode ? theme.cardTheme.color : Colors.white,
-            border: Border.all(
+  Widget _buildPaymentOptions(ThemeData theme, bool isDarkMode) {
+    return Column(
+      children: [
+        // Cash option with enhanced design
+        InkWell(
+          onTap: () {
+            setState(() {
+              _selectedPaymentMethod = 'cash';
+            });
+          },
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
               color: _selectedPaymentMethod == 'cash'
-                  ? theme.primaryColor
-                  : Colors.grey[300]!,
-              width: _selectedPaymentMethod == 'cash' ? 2 : 1,
-            ),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: _selectedPaymentMethod == 'cash'
-                ? [
-                    BoxShadow(
-                      color: theme.primaryColor.withValues(alpha: 0.2),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                : null,
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: _selectedPaymentMethod == 'cash'
-                        ? theme.primaryColor
-                        : Colors.grey[400]!,
-                    width: 2,
-                  ),
-                ),
-                child: _selectedPaymentMethod == 'cash'
-                    ? Center(
-                        child: Container(
-                          width: 12,
-                          height: 12,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: theme.primaryColor,
-                          ),
-                        ),
-                      )
-                    : null,
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Cash on Delivery',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: _selectedPaymentMethod == 'cash'
-                            ? theme.primaryColor
-                            : isDarkMode ? theme.colorScheme.onSurface : Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Pay when you receive your order',
-                      style: TextStyle(
-                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.payments_outlined,
+                  ? theme.primaryColor.withValues(alpha: 0.1)
+                  : isDarkMode
+                      ? theme.cardTheme.color
+                      : Colors.white,
+              border: Border.all(
                 color: _selectedPaymentMethod == 'cash'
                     ? theme.primaryColor
-                    : isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                size: 28,
+                    : Colors.grey[300]!,
+                width: _selectedPaymentMethod == 'cash' ? 2 : 1,
               ),
-            ],
-          ),
-        ),
-      ),
-      
-      const SizedBox(height: 16),
-      
-      // UPI option with enhanced design
-      InkWell(
-        onTap: () {
-          setState(() {
-            _selectedPaymentMethod = 'upi';
-          });
-        },
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: _selectedPaymentMethod == 'upi'
-                ? theme.primaryColor.withValues(alpha: 0.1)
-                : isDarkMode ? theme.cardTheme.color : Colors.white,
-            border: Border.all(
-              color: _selectedPaymentMethod == 'upi'
-                  ? theme.primaryColor
-                  : Colors.grey[300]!,
-              width: _selectedPaymentMethod == 'upi' ? 2 : 1,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: _selectedPaymentMethod == 'cash'
+                  ? [
+                      BoxShadow(
+                        color: theme.primaryColor.withValues(alpha: 0.2),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ]
+                  : null,
             ),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: _selectedPaymentMethod == 'upi'
-                ? [
-                    BoxShadow(
-                      color: theme.primaryColor.withValues(alpha: 0.2),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+            child: Row(
+              children: [
+                Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: _selectedPaymentMethod == 'cash'
+                          ? theme.primaryColor
+                          : Colors.grey[400]!,
+                      width: 2,
                     ),
-                  ]
-                : null,
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: _selectedPaymentMethod == 'upi'
-                        ? theme.primaryColor
-                        : Colors.grey[400]!,
-                    width: 2,
+                  ),
+                  child: _selectedPaymentMethod == 'cash'
+                      ? Center(
+                          child: Container(
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: theme.primaryColor,
+                            ),
+                          ),
+                        )
+                      : null,
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Cash on Delivery',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: _selectedPaymentMethod == 'cash'
+                              ? theme.primaryColor
+                              : isDarkMode
+                                  ? theme.colorScheme.onSurface
+                                  : Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Pay when you receive your order',
+                        style: TextStyle(
+                          color:
+                              isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                child: _selectedPaymentMethod == 'upi'
-                    ? Center(
-                        child: Container(
-                          width: 12,
-                          height: 12,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: theme.primaryColor,
-                          ),
-                        ),
-                      )
-                    : null,
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'UPI Payment',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: _selectedPaymentMethod == 'upi'
-                            ? theme.primaryColor
-                            : isDarkMode ? theme.colorScheme.onSurface : Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Pay using UPI apps like Google Pay, PhonePe',
-                      style: TextStyle(
-                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
+                Icon(
+                  Icons.payments_outlined,
+                  color: _selectedPaymentMethod == 'cash'
+                      ? theme.primaryColor
+                      : isDarkMode
+                          ? Colors.grey[400]
+                          : Colors.grey[600],
+                  size: 28,
                 ),
-              ),
-              Icon(
-                Icons.account_balance_wallet_outlined,
-                color: _selectedPaymentMethod == 'upi'
-                    ? theme.primaryColor
-                    : isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                size: 28,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    ],
-  );
-}
+
+        const SizedBox(height: 16),
+
+        // UPI option with enhanced design
+        InkWell(
+          onTap: () {
+            setState(() {
+              _selectedPaymentMethod = 'upi';
+            });
+          },
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: _selectedPaymentMethod == 'upi'
+                  ? theme.primaryColor.withValues(alpha: 0.1)
+                  : isDarkMode
+                      ? theme.cardTheme.color
+                      : Colors.white,
+              border: Border.all(
+                color: _selectedPaymentMethod == 'upi'
+                    ? theme.primaryColor
+                    : Colors.grey[300]!,
+                width: _selectedPaymentMethod == 'upi' ? 2 : 1,
+              ),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: _selectedPaymentMethod == 'upi'
+                  ? [
+                      BoxShadow(
+                        color: theme.primaryColor.withValues(alpha: 0.2),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ]
+                  : null,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: _selectedPaymentMethod == 'upi'
+                          ? theme.primaryColor
+                          : Colors.grey[400]!,
+                      width: 2,
+                    ),
+                  ),
+                  child: _selectedPaymentMethod == 'upi'
+                      ? Center(
+                          child: Container(
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: theme.primaryColor,
+                            ),
+                          ),
+                        )
+                      : null,
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'UPI Payment',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: _selectedPaymentMethod == 'upi'
+                              ? theme.primaryColor
+                              : isDarkMode
+                                  ? theme.colorScheme.onSurface
+                                  : Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Pay using UPI apps like Google Pay, PhonePe',
+                        style: TextStyle(
+                          color:
+                              isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.account_balance_wallet_outlined,
+                  color: _selectedPaymentMethod == 'upi'
+                      ? theme.primaryColor
+                      : isDarkMode
+                          ? Colors.grey[400]
+                          : Colors.grey[600],
+                  size: 28,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }

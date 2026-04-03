@@ -184,7 +184,8 @@ class _SignupScreenState extends State<SignupScreen>
                                   : theme.primaryColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(30),
                               border: Border.all(
-                                color: theme.primaryColor.withValues(alpha: 0.3),
+                                color:
+                                    theme.primaryColor.withValues(alpha: 0.3),
                               ),
                             ),
                             child: Text(

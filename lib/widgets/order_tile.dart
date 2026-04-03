@@ -6,7 +6,7 @@ class OrderTile extends StatelessWidget {
   final OrderModel order;
   final bool isStaff;
   final VoidCallback? onMarkCompleted;
-  
+
   const OrderTile({
     Key? key,
     required this.order,
@@ -20,7 +20,7 @@ class OrderTile extends StatelessWidget {
     const double buttonHeight = 50.0;
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: Stack(
@@ -29,9 +29,9 @@ class OrderTile extends StatelessWidget {
           SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.only(
-                left: 16, 
-                right: 16, 
-                top: 16, 
+                left: 16,
+                right: 16,
+                top: 16,
                 // Add padding at the bottom to make space for the button
                 bottom: isStaff && order.isPending ? buttonHeight + 16 : 16,
               ),
@@ -73,7 +73,9 @@ class OrderTile extends StatelessWidget {
                   Text(
                     'Date: ${DateFormat('MMM dd, yyyy hh:mm a').format(order.createdAt)}',
                     style: TextStyle(
-                      color: isDarkMode ? theme.colorScheme.onSurface.withValues(alpha: 0.7) : Colors.grey[600],
+                      color: isDarkMode
+                          ? theme.colorScheme.onSurface.withValues(alpha: 0.7)
+                          : Colors.grey[600],
                       fontSize: 14,
                     ),
                   ),
@@ -81,7 +83,9 @@ class OrderTile extends StatelessWidget {
                   Text(
                     'Payment Method: ${order.paymentMethod.toUpperCase()}',
                     style: TextStyle(
-                      color: isDarkMode ? theme.colorScheme.onSurface.withValues(alpha: 0.7) : Colors.grey[600],
+                      color: isDarkMode
+                          ? theme.colorScheme.onSurface.withValues(alpha: 0.7)
+                          : Colors.grey[600],
                       fontSize: 14,
                     ),
                   ),
@@ -143,7 +147,7 @@ class OrderTile extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Button positioned at the bottom
           if (isStaff && order.isPending)
             Positioned(

@@ -5,7 +5,7 @@ class AppThemes {
   static const Color primaryColor = Color(0xFFFEC62B);
   static int _colorChannelToInt(double value) =>
       (value * 255.0).round().clamp(0, 255);
-  
+
   // Light theme colors
   static final Color lightScaffoldColor = Colors.grey[50]!;
   static const Color lightCardColor = Colors.white;
@@ -14,7 +14,7 @@ class AppThemes {
   static final Color lightDividerColor = Colors.grey[200]!;
   static final Color lightInputFillColor = Colors.grey[50]!;
   static final Color lightInputBorderColor = Colors.grey[300]!;
-  
+
   // Dark theme colors
   static const Color darkScaffoldColor = Color(0xFF121212);
   static const Color darkCardColor = Color(0xFF1E1E1E);
@@ -23,8 +23,10 @@ class AppThemes {
   static final Color darkDividerColor = Colors.grey[800]!;
   static const Color darkInputFillColor = Color(0xFF2C2C2C);
   static final Color darkInputBorderColor = Colors.grey[700]!;
-  static const Color darkAppBarColor = Color(0xFF1A1A1A); // Changed from pure black to dark gray
-  static const Color darkSearchBarColor = Color(0xFF1A1A1A); // Changed from pure black to dark gray
+  static const Color darkAppBarColor =
+      Color(0xFF1A1A1A); // Changed from pure black to dark gray
+  static const Color darkSearchBarColor =
+      Color(0xFF1A1A1A); // Changed from pure black to dark gray
 
   // Create MaterialColor from a single color
   static MaterialColor createMaterialColor(Color color) {
@@ -122,7 +124,8 @@ class AppThemes {
         vertical: 16,
       ),
       labelStyle: TextStyle(color: lightSecondaryTextColor),
-      hintStyle: TextStyle(color: lightSecondaryTextColor.withValues(alpha: 0.7)),
+      hintStyle:
+          TextStyle(color: lightSecondaryTextColor.withValues(alpha: 0.7)),
     ),
     cardTheme: CardThemeData(
       color: lightCardColor,
@@ -247,7 +250,8 @@ class AppThemes {
         vertical: 16,
       ),
       labelStyle: TextStyle(color: darkSecondaryTextColor),
-      hintStyle: TextStyle(color: darkSecondaryTextColor.withValues(alpha: 0.7)),
+      hintStyle:
+          TextStyle(color: darkSecondaryTextColor.withValues(alpha: 0.7)),
     ),
     cardTheme: CardThemeData(
       color: darkCardColor,

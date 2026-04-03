@@ -318,7 +318,7 @@ class _HomeScreenState extends State<HomeScreen>
             actions: [
               // Theme toggle button
               const ThemeToggleButton(),
-              
+
               // History button
               if (Provider.of<AuthProvider>(context).isAuthenticated)
                 IconButton(
@@ -393,7 +393,9 @@ class _HomeScreenState extends State<HomeScreen>
               minHeight: isSmallMobile ? 70 : 90,
               maxHeight: isSmallMobile ? 70 : 90,
               child: Container(
-                color: isDarkMode ? theme.appBarTheme.backgroundColor : theme.scaffoldBackgroundColor,
+                color: isDarkMode
+                    ? theme.appBarTheme.backgroundColor
+                    : theme.scaffoldBackgroundColor,
                 child: Padding(
                   padding: EdgeInsets.all(isSmallMobile ? 12 : 16),
                   child: AnimatedContainer(
@@ -401,7 +403,9 @@ class _HomeScreenState extends State<HomeScreen>
                     curve: Curves.easeInOut,
                     height: isSmallMobile ? 40 : 50,
                     decoration: BoxDecoration(
-                      color: isDarkMode ? theme.inputDecorationTheme.fillColor : Colors.white,
+                      color: isDarkMode
+                          ? theme.inputDecorationTheme.fillColor
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(
                           _searchQuery.isNotEmpty ? 16 : 12),
                       boxShadow: [
@@ -416,7 +420,9 @@ class _HomeScreenState extends State<HomeScreen>
                       border: Border.all(
                         color: _searchQuery.isNotEmpty
                             ? theme.primaryColor.withValues(alpha: 0.5)
-                            : isDarkMode ? Colors.grey[700]! : Colors.grey[200]!,
+                            : isDarkMode
+                                ? Colors.grey[700]!
+                                : Colors.grey[200]!,
                         width: _searchQuery.isNotEmpty ? 1.5 : 1,
                       ),
                     ),
@@ -426,7 +432,8 @@ class _HomeScreenState extends State<HomeScreen>
                         hintText: 'Search for food items...',
                         hintStyle: TextStyle(
                           fontSize: isSmallMobile ? 12 : 14,
-                          color: isDarkMode ? Colors.grey[400] : Colors.grey[500],
+                          color:
+                              isDarkMode ? Colors.grey[400] : Colors.grey[500],
                         ),
                         prefixIcon: AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
@@ -435,7 +442,9 @@ class _HomeScreenState extends State<HomeScreen>
                             size: isSmallMobile ? 18 : 24,
                             color: _searchQuery.isNotEmpty
                                 ? theme.primaryColor
-                                : isDarkMode ? Colors.grey[400] : Colors.grey[400],
+                                : isDarkMode
+                                    ? Colors.grey[400]
+                                    : Colors.grey[400],
                           ),
                         ),
                         suffixIcon: _searchQuery.isNotEmpty
@@ -449,7 +458,9 @@ class _HomeScreenState extends State<HomeScreen>
                                       icon: Icon(
                                         Icons.clear,
                                         size: isSmallMobile ? 18 : 24,
-                                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                        color: isDarkMode
+                                            ? Colors.grey[400]
+                                            : Colors.grey[600],
                                       ),
                                       onPressed: () {
                                         setState(() {
@@ -463,7 +474,9 @@ class _HomeScreenState extends State<HomeScreen>
                               )
                             : null,
                         filled: true,
-                        fillColor: isDarkMode ? theme.inputDecorationTheme.fillColor : Colors.white,
+                        fillColor: isDarkMode
+                            ? theme.inputDecorationTheme.fillColor
+                            : Colors.white,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
@@ -546,14 +559,17 @@ class _HomeScreenState extends State<HomeScreen>
                         Icon(
                           Icons.search_off,
                           size: isSmallMobile ? 48 : 64,
-                          color: isDarkMode ? Colors.grey[500] : Colors.grey[400],
+                          color:
+                              isDarkMode ? Colors.grey[500] : Colors.grey[400],
                         ),
                         const SizedBox(height: 16),
                         Text(
                           'No items found',
                           style: TextStyle(
                             fontSize: isSmallMobile ? 16 : 18,
-                            color: isDarkMode ? Colors.grey[300] : Colors.grey[600],
+                            color: isDarkMode
+                                ? Colors.grey[300]
+                                : Colors.grey[600],
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -562,7 +578,9 @@ class _HomeScreenState extends State<HomeScreen>
                           'Try a different search term',
                           style: TextStyle(
                             fontSize: isSmallMobile ? 12 : 14,
-                            color: isDarkMode ? Colors.grey[400] : Colors.grey[500],
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[500],
                           ),
                         ),
                       ],

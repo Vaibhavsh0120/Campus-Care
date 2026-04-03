@@ -92,7 +92,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Image preview section
                       Center(
                         child: Stack(
@@ -101,17 +101,23 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                               height: 200,
                               width: 200,
                               decoration: BoxDecoration(
-                                color: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                                color: isDarkMode
+                                    ? Colors.grey[800]
+                                    : Colors.grey[200],
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: isDarkMode ? Colors.grey[700]! : Colors.grey[300]!,
+                                  color: isDarkMode
+                                      ? Colors.grey[700]!
+                                      : Colors.grey[300]!,
                                   width: 2,
                                 ),
                               ),
                               child: isUploading
                                   ? const Center(
                                       child: CircularProgressIndicator(
-                                        valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                primaryColor),
                                       ),
                                     )
                                   : ClipRRect(
@@ -121,69 +127,89 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                               ? Image.memory(
                                                   webImage!,
                                                   fit: BoxFit.cover,
-                                                  errorBuilder: (context, error, stackTrace) {
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
                                                     debugPrint(
                                                         'Error loading web image: $error');
                                                     return Icon(
                                                       Icons.image_not_supported,
                                                       size: 50,
-                                                      color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+                                                      color: isDarkMode
+                                                          ? Colors.grey[600]
+                                                          : Colors.grey[400],
                                                     );
                                                   },
                                                 )
-                                              : imageUrl != null && imageUrl.isNotEmpty
+                                              : imageUrl != null &&
+                                                      imageUrl.isNotEmpty
                                                   ? Image.network(
                                                       imageUrl,
                                                       fit: BoxFit.cover,
-                                                      errorBuilder:
-                                                          (context, error, stackTrace) {
+                                                      errorBuilder: (context,
+                                                          error, stackTrace) {
                                                         debugPrint(
                                                             'Error loading network image: $error');
                                                         return Icon(
-                                                          Icons.image_not_supported,
+                                                          Icons
+                                                              .image_not_supported,
                                                           size: 50,
-                                                          color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+                                                          color: isDarkMode
+                                                              ? Colors.grey[600]
+                                                              : Colors
+                                                                  .grey[400],
                                                         );
                                                       },
                                                     )
                                                   : Icon(
                                                       Icons.add_photo_alternate,
                                                       size: 50,
-                                                      color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+                                                      color: isDarkMode
+                                                          ? Colors.grey[600]
+                                                          : Colors.grey[400],
                                                     )
                                           : pickedImage != null
                                               ? Image.file(
                                                   File(pickedImage!.path),
                                                   fit: BoxFit.cover,
-                                                  errorBuilder: (context, error, stackTrace) {
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
                                                     debugPrint(
                                                         'Error loading file image: $error');
                                                     return Icon(
                                                       Icons.image_not_supported,
                                                       size: 50,
-                                                      color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+                                                      color: isDarkMode
+                                                          ? Colors.grey[600]
+                                                          : Colors.grey[400],
                                                     );
                                                   },
                                                 )
-                                              : imageUrl != null && imageUrl.isNotEmpty
+                                              : imageUrl != null &&
+                                                      imageUrl.isNotEmpty
                                                   ? Image.network(
                                                       imageUrl,
                                                       fit: BoxFit.cover,
-                                                      errorBuilder:
-                                                          (context, error, stackTrace) {
+                                                      errorBuilder: (context,
+                                                          error, stackTrace) {
                                                         debugPrint(
                                                             'Error loading network image: $error');
                                                         return Icon(
-                                                          Icons.image_not_supported,
+                                                          Icons
+                                                              .image_not_supported,
                                                           size: 50,
-                                                          color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+                                                          color: isDarkMode
+                                                              ? Colors.grey[600]
+                                                              : Colors
+                                                                  .grey[400],
                                                         );
                                                       },
                                                     )
                                                   : Icon(
                                                       Icons.add_photo_alternate,
                                                       size: 50,
-                                                      color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+                                                      color: isDarkMode
+                                                          ? Colors.grey[600]
+                                                          : Colors.grey[400],
                                                     ),
                                     ),
                             ),
@@ -195,7 +221,8 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                     ? null
                                     : () async {
                                         try {
-                                          final XFile? image = await _picker.pickImage(
+                                          final XFile? image =
+                                              await _picker.pickImage(
                                             source: ImageSource.gallery,
                                             maxWidth: 1024,
                                             maxHeight: 1024,
@@ -207,7 +234,9 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                               pickedImage = image;
                                               // For web, read the file as bytes for preview
                                               if (kIsWeb) {
-                                                image.readAsBytes().then((value) {
+                                                image
+                                                    .readAsBytes()
+                                                    .then((value) {
                                                   setState(() {
                                                     webImage = value;
                                                   });
@@ -229,7 +258,9 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                     color: primaryColor,
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: isDarkMode ? Colors.grey[800]! : Colors.white,
+                                      color: isDarkMode
+                                          ? Colors.grey[800]!
+                                          : Colors.white,
                                       width: 2,
                                     ),
                                   ),
@@ -245,7 +276,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Item name field
                       Text(
                         'Item Name',
@@ -261,17 +292,23 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                         decoration: InputDecoration(
                           hintText: 'Enter item name',
                           hintStyle: TextStyle(
-                            color: isDarkMode ? Colors.grey[400] : Colors.grey[500],
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[500],
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           prefixIcon: Icon(
                             Icons.fastfood,
-                            color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[600],
                           ),
                           filled: true,
-                          fillColor: isDarkMode ? theme.inputDecorationTheme.fillColor : Colors.white,
+                          fillColor: isDarkMode
+                              ? theme.inputDecorationTheme.fillColor
+                              : Colors.white,
                         ),
                         style: TextStyle(
                           color: theme.colorScheme.onSurface,
@@ -284,7 +321,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Description field
                       Text(
                         'Description',
@@ -300,17 +337,23 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                         decoration: InputDecoration(
                           hintText: 'Enter item description',
                           hintStyle: TextStyle(
-                            color: isDarkMode ? Colors.grey[400] : Colors.grey[500],
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[500],
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           prefixIcon: Icon(
                             Icons.description,
-                            color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[600],
                           ),
                           filled: true,
-                          fillColor: isDarkMode ? theme.inputDecorationTheme.fillColor : Colors.white,
+                          fillColor: isDarkMode
+                              ? theme.inputDecorationTheme.fillColor
+                              : Colors.white,
                         ),
                         style: TextStyle(
                           color: theme.colorScheme.onSurface,
@@ -318,7 +361,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                         maxLines: 3,
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Price field
                       Text(
                         'Price',
@@ -334,17 +377,23 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                         decoration: InputDecoration(
                           hintText: 'Enter price',
                           hintStyle: TextStyle(
-                            color: isDarkMode ? Colors.grey[400] : Colors.grey[500],
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[500],
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           prefixIcon: Icon(
                             Icons.currency_rupee,
-                            color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[600],
                           ),
                           filled: true,
-                          fillColor: isDarkMode ? theme.inputDecorationTheme.fillColor : Colors.white,
+                          fillColor: isDarkMode
+                              ? theme.inputDecorationTheme.fillColor
+                              : Colors.white,
                         ),
                         style: TextStyle(
                           color: theme.colorScheme.onSurface,
@@ -363,7 +412,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Availability switch
                       SwitchListTile(
                         title: Text(
@@ -383,9 +432,9 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                           });
                         },
                       ),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       // Action buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -404,20 +453,23 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                         isUploading = true;
                                       });
 
-                                      final itemProvider = Provider.of<ItemProvider>(
-                                          dialogContext,
-                                          listen: false);
+                                      final itemProvider =
+                                          Provider.of<ItemProvider>(
+                                              dialogContext,
+                                              listen: false);
 
                                       String? finalImageUrl = imageUrl;
 
                                       // Upload image if a new one was selected
                                       if (pickedImage != null) {
                                         try {
-                                          final fileName = '${const Uuid().v4()}.jpg';
+                                          final fileName =
+                                              '${const Uuid().v4()}.jpg';
                                           debugPrint(
                                               'Uploading image: ${pickedImage!.path} as $fileName');
 
-                                          finalImageUrl = await itemProvider.uploadImage(
+                                          finalImageUrl =
+                                              await itemProvider.uploadImage(
                                             pickedImage!.path,
                                             fileName,
                                           );
@@ -437,7 +489,8 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                           debugPrint(
                                               'Image uploaded successfully: $finalImageUrl');
                                         } catch (e) {
-                                          debugPrint('Error uploading image: $e');
+                                          debugPrint(
+                                              'Error uploading image: $e');
                                           Fluttertoast.showToast(
                                             msg: 'Error uploading image: $e',
                                             toastLength: Toast.LENGTH_LONG,
@@ -455,15 +508,17 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                           final newItem = ItemModel(
                                             id: const Uuid().v4(),
                                             name: nameController.text,
-                                            description: descriptionController.text,
-                                            price: double.parse(priceController.text),
+                                            description:
+                                                descriptionController.text,
+                                            price: double.parse(
+                                                priceController.text),
                                             imageUrl: finalImageUrl,
                                             availableToday: availableToday,
                                             createdAt: DateTime.now(),
                                           );
 
-                                          final success =
-                                              await itemProvider.createItem(newItem);
+                                          final success = await itemProvider
+                                              .createItem(newItem);
                                           if (success) {
                                             Fluttertoast.showToast(
                                               msg: 'Item created successfully!',
@@ -471,7 +526,8 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                             );
                                           } else {
                                             Fluttertoast.showToast(
-                                              msg: 'Failed to create item. Please try again.',
+                                              msg:
+                                                  'Failed to create item. Please try again.',
                                               toastLength: Toast.LENGTH_LONG,
                                             );
                                           }
@@ -479,14 +535,16 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                           // Update existing item
                                           final updatedItem = item.copyWith(
                                             name: nameController.text,
-                                            description: descriptionController.text,
-                                            price: double.parse(priceController.text),
+                                            description:
+                                                descriptionController.text,
+                                            price: double.parse(
+                                                priceController.text),
                                             imageUrl: finalImageUrl,
                                             availableToday: availableToday,
                                           );
 
-                                          final success =
-                                              await itemProvider.updateItem(updatedItem);
+                                          final success = await itemProvider
+                                              .updateItem(updatedItem);
                                           if (success) {
                                             Fluttertoast.showToast(
                                               msg: 'Item updated successfully!',
@@ -494,7 +552,8 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                             );
                                           } else {
                                             Fluttertoast.showToast(
-                                              msg: 'Failed to update item. Please try again.',
+                                              msg:
+                                                  'Failed to update item. Please try again.',
                                               toastLength: Toast.LENGTH_LONG,
                                             );
                                           }
@@ -524,7 +583,8 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                 vertical: 12,
                               ),
                             ),
-                            child: Text(item == null ? 'Add Item' : 'Save Changes'),
+                            child: Text(
+                                item == null ? 'Add Item' : 'Save Changes'),
                           ),
                         ],
                       ),
@@ -600,10 +660,13 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
     final filteredItems = itemProvider.items.where((item) {
       final matchesSearch = _searchQuery.isEmpty ||
           item.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          (item.description?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false);
-      
+          (item.description
+                  ?.toLowerCase()
+                  .contains(_searchQuery.toLowerCase()) ??
+              false);
+
       final matchesAvailability = !_showOnlyAvailable || item.availableToday;
-      
+
       return matchesSearch && matchesAvailability;
     }).toList();
 
@@ -621,7 +684,8 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                       color: isDarkMode ? theme.cardTheme.color : Colors.white,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: isDarkMode ? 0.2 : 0.05),
+                          color: Colors.black
+                              .withValues(alpha: isDarkMode ? 0.2 : 0.05),
                           blurRadius: 5,
                           offset: const Offset(0, 2),
                         ),
@@ -638,17 +702,23 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                   decoration: InputDecoration(
                                     hintText: 'Search menu items...',
                                     hintStyle: TextStyle(
-                                      color: isDarkMode ? Colors.grey[400] : Colors.grey[500],
+                                      color: isDarkMode
+                                          ? Colors.grey[400]
+                                          : Colors.grey[500],
                                     ),
                                     prefixIcon: Icon(
                                       Icons.search,
-                                      color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                      color: isDarkMode
+                                          ? Colors.grey[400]
+                                          : Colors.grey[600],
                                     ),
                                     suffixIcon: _searchQuery.isNotEmpty
                                         ? IconButton(
                                             icon: Icon(
                                               Icons.clear,
-                                              color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                              color: isDarkMode
+                                                  ? Colors.grey[400]
+                                                  : Colors.grey[600],
                                             ),
                                             onPressed: () {
                                               setState(() {
@@ -659,12 +729,15 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                           )
                                         : null,
                                     filled: true,
-                                    fillColor: isDarkMode ? theme.inputDecorationTheme.fillColor : Colors.grey[100],
+                                    fillColor: isDarkMode
+                                        ? theme.inputDecorationTheme.fillColor
+                                        : Colors.grey[100],
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                       borderSide: BorderSide.none,
                                     ),
-                                    contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                                    contentPadding:
+                                        const EdgeInsets.symmetric(vertical: 0),
                                   ),
                                   style: TextStyle(
                                     color: theme.colorScheme.onSurface,
@@ -677,7 +750,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                 ),
                               ),
                               const SizedBox(width: 16),
-                              
+
                               // Filter switch
                               Expanded(
                                 flex: 2,
@@ -700,12 +773,13 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                   },
                                 ),
                               ),
-                              
+
                               const SizedBox(width: 16),
-                              
+
                               // Refresh button
                               TextButton.icon(
-                                onPressed: () => itemProvider.loadItems(onlyAvailable: false),
+                                onPressed: () => itemProvider.loadItems(
+                                    onlyAvailable: false),
                                 icon: const Icon(Icons.refresh),
                                 label: const Text('Refresh'),
                                 style: TextButton.styleFrom(
@@ -722,17 +796,23 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                 decoration: InputDecoration(
                                   hintText: 'Search menu items...',
                                   hintStyle: TextStyle(
-                                    color: isDarkMode ? Colors.grey[400] : Colors.grey[500],
+                                    color: isDarkMode
+                                        ? Colors.grey[400]
+                                        : Colors.grey[500],
                                   ),
                                   prefixIcon: Icon(
                                     Icons.search,
-                                    color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                    color: isDarkMode
+                                        ? Colors.grey[400]
+                                        : Colors.grey[600],
                                   ),
                                   suffixIcon: _searchQuery.isNotEmpty
                                       ? IconButton(
                                           icon: Icon(
                                             Icons.clear,
-                                            color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                            color: isDarkMode
+                                                ? Colors.grey[400]
+                                                : Colors.grey[600],
                                           ),
                                           onPressed: () {
                                             setState(() {
@@ -743,12 +823,15 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                         )
                                       : null,
                                   filled: true,
-                                  fillColor: isDarkMode ? theme.inputDecorationTheme.fillColor : Colors.grey[100],
+                                  fillColor: isDarkMode
+                                      ? theme.inputDecorationTheme.fillColor
+                                      : Colors.grey[100],
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                     borderSide: BorderSide.none,
                                   ),
-                                  contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                                  contentPadding:
+                                      const EdgeInsets.symmetric(vertical: 0),
                                 ),
                                 style: TextStyle(
                                   color: theme.colorScheme.onSurface,
@@ -759,7 +842,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                   });
                                 },
                               ),
-                              
+
                               // Filter switch
                               SwitchListTile(
                                 title: Text(
@@ -782,23 +865,27 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                             ],
                           ),
                   ),
-                  
+
                   // Items count
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Row(
                       children: [
                         Text(
                           'Showing ${filteredItems.length} items',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[700],
                           ),
                         ),
                         const Spacer(),
                         if (!isLargeScreen)
                           TextButton.icon(
-                            onPressed: () => itemProvider.loadItems(onlyAvailable: false),
+                            onPressed: () =>
+                                itemProvider.loadItems(onlyAvailable: false),
                             icon: const Icon(Icons.refresh),
                             label: const Text('Refresh'),
                             style: TextButton.styleFrom(
@@ -808,7 +895,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                       ],
                     ),
                   ),
-                  
+
                   // Items grid - Responsive layout
                   filteredItems.isEmpty
                       ? Center(
@@ -820,7 +907,9 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                 Icon(
                                   Icons.no_food,
                                   size: 80,
-                                  color: isDarkMode ? Colors.grey[700] : Colors.grey[400],
+                                  color: isDarkMode
+                                      ? Colors.grey[700]
+                                      : Colors.grey[400],
                                 ),
                                 const SizedBox(height: 24),
                                 Text(
@@ -832,12 +921,15 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                    color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                    color: isDarkMode
+                                        ? Colors.grey[400]
+                                        : Colors.grey[600],
                                   ),
                                 ),
                                 const SizedBox(height: 16),
                                 ElevatedButton(
-                                  onPressed: () => _showAddEditItemDialog(context),
+                                  onPressed: () =>
+                                      _showAddEditItemDialog(context),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: primaryColor,
                                     foregroundColor: Colors.black87,
@@ -857,16 +949,20 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                           child: GridView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: crossAxisCount,
-                              childAspectRatio: isLargeScreen ? 0.85 : 0.75, // Adjusted for better proportions
+                              childAspectRatio: isLargeScreen
+                                  ? 0.85
+                                  : 0.75, // Adjusted for better proportions
                               crossAxisSpacing: 16,
                               mainAxisSpacing: 16,
                             ),
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              return _buildItemCard(context, item, primaryColor, isDarkMode, theme);
+                              return _buildItemCard(context, item, primaryColor,
+                                  isDarkMode, theme);
                             },
                           ),
                         ),
@@ -885,10 +981,11 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
     );
   }
 
-  Widget _buildItemCard(BuildContext context, ItemModel item, Color primaryColor, bool isDarkMode, ThemeData theme) {
+  Widget _buildItemCard(BuildContext context, ItemModel item,
+      Color primaryColor, bool isDarkMode, ThemeData theme) {
     final size = MediaQuery.of(context).size;
     final isLargeScreen = size.width > 900;
-    
+
     return Card(
       elevation: 4,
       color: theme.cardTheme.color,
@@ -905,7 +1002,9 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
             Stack(
               children: [
                 SizedBox(
-                  height: isLargeScreen ? 140 : 120, // Taller image for large screens
+                  height: isLargeScreen
+                      ? 140
+                      : 120, // Taller image for large screens
                   width: double.infinity,
                   child: item.imageUrl != null && item.imageUrl!.isNotEmpty
                       ? Image.network(
@@ -913,17 +1012,21 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return Container(
-                              color: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                              color: isDarkMode
+                                  ? Colors.grey[800]
+                                  : Colors.grey[200],
                               child: Icon(
                                 Icons.fastfood,
                                 size: 50,
-                                color: isDarkMode ? Colors.grey[600] : Colors.grey,
+                                color:
+                                    isDarkMode ? Colors.grey[600] : Colors.grey,
                               ),
                             );
                           },
                         )
                       : Container(
-                          color: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                          color:
+                              isDarkMode ? Colors.grey[800] : Colors.grey[200],
                           child: Icon(
                             Icons.fastfood,
                             size: 50,
@@ -941,9 +1044,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: item.availableToday
-                          ? Colors.green
-                          : Colors.red,
+                      color: item.availableToday ? Colors.green : Colors.red,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -958,7 +1059,7 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                 ),
               ],
             ),
-            
+
             // Item details
             Expanded(
               child: Padding(
@@ -981,11 +1082,14 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
-                        if (item.description != null && item.description!.isNotEmpty)
+                        if (item.description != null &&
+                            item.description!.isNotEmpty)
                           Text(
                             item.description!,
                             style: TextStyle(
-                              color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                              color: isDarkMode
+                                  ? Colors.grey[400]
+                                  : Colors.grey[600],
                               fontSize: 12,
                             ),
                             maxLines: 2,
@@ -1002,14 +1106,15 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                         ),
                       ],
                     ),
-                    
+
                     // Action buttons
                     Row(
                       children: [
                         // Edit button
                         Expanded(
                           child: OutlinedButton(
-                            onPressed: () => _showAddEditItemDialog(context, item),
+                            onPressed: () =>
+                                _showAddEditItemDialog(context, item),
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               foregroundColor: primaryColor,
@@ -1022,12 +1127,15 @@ class _ManageItemsScreenState extends State<ManageItemsScreen> {
                         // Toggle availability button
                         Container(
                           decoration: BoxDecoration(
-                            color: item.availableToday ? Colors.green.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
+                            color: item.availableToday
+                                ? Colors.green.withValues(alpha: 0.1)
+                                : Colors.red.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: IconButton(
                             onPressed: () {
-                              Provider.of<ItemProvider>(context, listen: false).toggleItemAvailability(
+                              Provider.of<ItemProvider>(context, listen: false)
+                                  .toggleItemAvailability(
                                 item.id,
                                 !item.availableToday,
                               );
