@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-FLUTTER_VERSION=3.29.3
+FLUTTER_VERSION=3.41.2
 FLUTTER_REPO=https://github.com/flutter/flutter.git
 
 if [ -d flutter ]; then
